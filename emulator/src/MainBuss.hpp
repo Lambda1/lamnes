@@ -5,18 +5,21 @@
 #include <string>
 
 #include "./Cartridge.hpp"
-#include "./CPU6502.hpp"
 
 namespace lamnes
 {
+	class CPU6502;
+	
 	class MainBuss
 	{
 	public:
 		MainBuss();
 		~MainBuss();
 
-		void Init();
+		void Init(Cartridge *cartridge_ptr, CPU6502 *cpu6502_ptr);
 	private:
+		Cartridge* m_cartridge_ptr;
+		CPU6502* m_cpu6502_ptr;
 	};
 }
 

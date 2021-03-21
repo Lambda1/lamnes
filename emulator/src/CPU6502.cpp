@@ -1,4 +1,6 @@
-#include "CPU6502.hpp"
+#include "./CPU6502.hpp"
+
+#include "./MainBuss.hpp"
 
 namespace lamnes
 {
@@ -9,7 +11,8 @@ namespace lamnes
 		m_idx_reg_x{ 0 }, m_idx_reg_y{ 0 },
 		m_stack_ptr{ 0 },
 		m_status_reg{ 0 },
-		m_pc{ 0 }
+		m_pc{ 0 },
+		m_main_buss_ptr{nullptr}
 	{
 	}
 
@@ -18,8 +21,9 @@ namespace lamnes
 	}
 
 	// ‰Šú‰»ˆ—
-	void CPU6502::Init()
+	void CPU6502::Init(MainBuss* main_buss)
 	{
+		m_main_buss_ptr = main_buss;
 		PowerUp();
 		Reset();
 	}

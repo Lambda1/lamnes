@@ -6,6 +6,7 @@
 
 #include "./Cartridge.hpp"
 #include "./CPU6502.hpp"
+#include "./MainBuss.hpp"
 
 namespace lamnes
 {
@@ -20,6 +21,7 @@ namespace lamnes
 	private:
 		Cartridge m_cartridge;
 		CPU6502 m_cpu6502;
+		MainBuss m_main_buss;
 	};
 }
 

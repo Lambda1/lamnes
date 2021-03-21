@@ -4,7 +4,8 @@ namespace lamnes
 {
 	LamNES::LamNES():
 		m_cartridge{},
-		m_cpu6502{}
+		m_cpu6502{},
+		m_main_buss{}
 	{
 	}
 	LamNES::~LamNES()
@@ -15,6 +16,8 @@ namespace lamnes
 	void LamNES::Init(const std::string& rom_path)
 	{
 		m_cartridge.Init(rom_path);
-		m_cpu6502.Init();
+		m_cpu6502.Init(&m_main_buss);
+
+		m_main_buss.Init(&m_cartridge, &m_cpu6502);
 	}
 }

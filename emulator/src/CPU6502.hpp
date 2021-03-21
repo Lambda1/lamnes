@@ -8,6 +8,8 @@
 
 namespace lamnes
 {
+	class MainBuss;
+	
 	class CPU6502
 	{
 	private:
@@ -18,7 +20,7 @@ namespace lamnes
 		CPU6502();
 		~CPU6502();
 
-		void Init();
+		void Init(MainBuss *main_buss);
 		
 		void Reset();
 
@@ -28,6 +30,8 @@ namespace lamnes
 		type8 m_stack_ptr;
 		type8 m_status_reg;
 		type16 m_pc;
+
+		MainBuss* m_main_buss_ptr;
 
 		void PowerUp();
 
