@@ -14,5 +14,7 @@ int main(int argc, char* argv[])
 	lamnes::LamNES nes{};
 	nes.Init(argv[1]);
 
+	nes.MainLoop();
+
 	return 0;
 }

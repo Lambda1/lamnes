@@ -4,8 +4,10 @@
 #include <iostream>
 #include <vector>
 
-#include "./DefStatusRegister.hpp"
 #include "./DefType.hpp"
+#include "./DefStatusRegister.hpp"
+#include "./DefOpcode.hpp"
+#include "./DefAddressing.hpp"
 
 namespace lamnes
 {
@@ -22,6 +24,7 @@ namespace lamnes
 		void Init(MainBuss *main_buss);
 		
 		void Reset();
+		void Step();
 
 	private:
 		type8 m_accumulator;
@@ -30,11 +33,15 @@ namespace lamnes
 		type8 m_status_reg;
 		address m_pc;
 
+		unsigned long long int m_cycles;
+
 		MainBuss* m_main_buss_ptr;
 
 		void PowerUp();
 
-		address Fetch(const address &addr);
+		type8 Fetch(const address &addr);
+		Addressing Decode(const type8 &op);
+
 	};
 }
 

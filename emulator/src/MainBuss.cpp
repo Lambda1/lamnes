@@ -56,12 +56,12 @@ namespace lamnes
 		else if (addr < static_cast<address>(0xC000))
 		{
 			// PRG ROM LOW
+			address conv_addr = (addr - static_cast<address>(0x8000));
+			data = m_cartridge_ptr->GetPRGROM(conv_addr);
 		}
 		else
 		{
 			// PRG ROM HIGH
-			std::cerr << "\tPRG HIGH" << std::endl;
-			
 			address conv_addr = (addr - static_cast<address>(0x8000));
 			data = m_cartridge_ptr->GetPRGROM(conv_addr);
 		}

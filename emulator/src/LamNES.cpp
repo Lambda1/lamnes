@@ -20,4 +20,14 @@ namespace lamnes
 		m_cartridge.Init(rom_path);
 		m_cpu6502.Init(&m_main_buss);
 	}
+
+	// ƒƒCƒ“ˆ—
+	void LamNES::MainLoop()
+	{
+		bool is_end = false;
+		while (!is_end)
+		{
+			m_cpu6502.Step();
+		}
+	}
 }

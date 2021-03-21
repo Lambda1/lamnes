@@ -12,6 +12,7 @@ namespace lamnes
 		m_stack_ptr{ 0 },
 		m_status_reg{ 0 },
 		m_pc{ 0 },
+		m_cycles{0},
 		m_main_buss_ptr{nullptr}
 	{
 	}
@@ -38,7 +39,13 @@ namespace lamnes
 	void CPU6502::Reset()
 	{
 		m_status_reg = Status::I; // 割り込み禁止
-		m_pc = Fetch(0xfffc);
+		m_pc = Fetch(0xfffc) | (Fetch(0xfffd) << 8);
+	}
+	// 処理実行
+	void CPU6502::Step()
+	{
+		type8 op = Fetch(m_pc++);
+		Decode(op);
 	}
 
 	/* private */
@@ -65,13 +72,29 @@ namespace lamnes
 		// 未実装
 	}
 	// 命令フェッチ
-	address CPU6502::Fetch(const address& addr)
+	lamnes::type8 CPU6502::Fetch(const address& addr)
 	{
-		type16 low = m_main_buss_ptr->Read(addr);
-		type16 high = m_main_buss_ptr->Read(addr + 1);
+		return m_main_buss_ptr->Read(addr);
+	}
+	// 命令デコード
+	lamnes::Addressing CPU6502::Decode(const type8& op)
+	{
+#if _DEBUG
+		std::cerr << "\tDECODE" << std::endl;
+		std::cerr << std::hex << static_cast<int>(op) << std::endl;
+#endif
 
-		address op = ((high << 8) | low);
+		Addressing code = Addressing::NONE;
 
-		return op;
+		switch (op)
+		{
+		case OP::IMPLIED::SEI:
+			code = Addressing::IMPLIED;
+			break;
+		default:
+			break;
+		}
+
+		return code;
 	}
 }

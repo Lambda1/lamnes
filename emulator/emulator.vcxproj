@@ -150,6 +150,8 @@
   <ItemGroup>
     <ClInclude Include="src\Cartridge.hpp" />
     <ClInclude Include="src\CPU6502.hpp" />
+    <ClInclude Include="src\DefAddressing.hpp" />
+    <ClInclude Include="src\DefOpcode.hpp" />
     <ClInclude Include="src\DefStatusRegister.hpp" />
     <ClInclude Include="src\DefType.hpp" />
     <ClInclude Include="src\LamNES.hpp" />

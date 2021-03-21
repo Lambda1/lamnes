@@ -18,6 +18,8 @@ namespace lamnes
 
 		void Init(const std::string &rom_path);
 
+		void MainLoop();
+
 	private:
 		Cartridge m_cartridge;
 		CPU6502 m_cpu6502;
