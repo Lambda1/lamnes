@@ -148,6 +148,7 @@
   <ItemGroup>
     <ClInclude Include="src\Cartridge.hpp" />
     <ClInclude Include="src\CPU6502.hpp" />
+    <ClInclude Include="src\DefStatusRegister.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

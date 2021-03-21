@@ -2,6 +2,8 @@
 
 namespace lamnes
 {
+	/* public */
+
 	CPU6502::CPU6502() :
 		m_accumulator{ 0 },
 		m_idx_reg_x{ 0 }, m_idx_reg_y{ 0 },
@@ -9,17 +11,26 @@ namespace lamnes
 		m_status_reg{ 0 },
 		m_pc{ 0 }
 	{
-		m_memory.resize(0xffff, 0);
 	}
 
 	CPU6502::~CPU6502()
 	{
 	}
 
+	// 初期化処理
 	void CPU6502::Init()
 	{
 		PowerUp();
+		Reset();
 	}
+
+	// リセット処理
+	void CPU6502::Reset()
+	{
+
+	}
+
+	/* private */
 
 	// 電源投入処理
 	void CPU6502::PowerUp()
@@ -31,11 +42,15 @@ namespace lamnes
 		m_stack_ptr = static_cast<type8>(0xfd);
 
 		// frame irq enable
-		m_memory[0x4017] = static_cast<type16>(0x00);
+		// 未実装
+		
 		// all channels disable
-		m_memory[0x4015] = static_cast<type16>(0x00);
+		// 未実装
 
-		for (size_t i = 0x4000; i <= 0x400f; ++i) { m_memory[i] = static_cast<type16>(0x00); }
-		for (size_t i = 0x4010; i <= 0x4013; ++i) { m_memory[i] = static_cast<type16>(0x00); }
+		// 0x4000-0x400f = 0x00
+		// 未実装
+		
+		// 0x4010-0x4013 = 0x00
+		// 未実装
 	}
 }

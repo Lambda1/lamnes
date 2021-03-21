@@ -17,6 +17,8 @@ namespace lamnes
 		~CPU6502();
 
 		void Init();
+		
+		void Reset();
 
 	private:
 		type8 m_accumulator;
@@ -24,8 +26,6 @@ namespace lamnes
 		type8 m_stack_ptr;
 		type8 m_status_reg;
 		type16 m_pc;
-
-		std::vector<type16> m_memory;
 
 		void PowerUp();
 	};
