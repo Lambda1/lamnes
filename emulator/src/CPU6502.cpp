@@ -27,7 +27,7 @@ namespace lamnes
 	// リセット処理
 	void CPU6502::Reset()
 	{
-
+		m_status_reg = Status::I; // 割り込み禁止
 	}
 
 	/* private */
@@ -52,5 +52,10 @@ namespace lamnes
 		
 		// 0x4010-0x4013 = 0x00
 		// 未実装
+	}
+	// 命令フェッチ
+	CPU6502::type16 CPU6502::Fetch(const type16& address)
+	{
+		return type16();
 	}
 }

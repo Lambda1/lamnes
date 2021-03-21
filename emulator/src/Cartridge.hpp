@@ -7,8 +7,6 @@
 #include <string>
 #include <algorithm>
 
-#include "./DefStatusRegister.hpp"
-
 namespace lamnes
 {
 	class Cartridge

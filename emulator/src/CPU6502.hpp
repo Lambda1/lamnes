@@ -4,6 +4,8 @@
 #include <iostream>
 #include <vector>
 
+#include "./DefStatusRegister.hpp"
+
 namespace lamnes
 {
 	class CPU6502
@@ -28,6 +30,8 @@ namespace lamnes
 		type16 m_pc;
 
 		void PowerUp();
+
+		type16 Fetch(const type16 &address);
 	};
 }
 
