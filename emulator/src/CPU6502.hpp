@@ -41,6 +41,8 @@ namespace lamnes
 
 		type8 Fetch(const address &addr);
 		Addressing Decode(const type8 &op);
+		void Execute(const Addressing &mode, const type8 &op);
+		void ExecuteImplied(const type8& op);
 
 	};
 }

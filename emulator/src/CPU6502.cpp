@@ -44,8 +44,14 @@ namespace lamnes
 	// ˆ—Às
 	void CPU6502::Step()
 	{
+#if _DEBUG
+		std::cout << "\n" << "CYCLE: " << m_cycles << std::endl;
+		std::cout << "PGCNT: " << std::hex << m_pc << std::endl;
+		std::cout << "STATUS: " << std::hex << static_cast<int>(m_status_reg) << std::endl;
+#endif
 		type8 op = Fetch(m_pc++);
-		Decode(op);
+		Addressing mode = Decode(op);
+		Execute(mode, op);
 	}
 
 	/* private */
@@ -80,21 +86,44 @@ namespace lamnes
 	lamnes::Addressing CPU6502::Decode(const type8& op)
 	{
 #if _DEBUG
-		std::cerr << "\tDECODE" << std::endl;
-		std::cerr << std::hex << static_cast<int>(op) << std::endl;
+		std::cerr << "\tDECODE: " << std::hex << static_cast<int>(op & 0xff) << std::endl;
 #endif
 
-		Addressing code = Addressing::NONE;
+		Addressing mode = Addressing::NONE;
 
 		switch (op)
 		{
 		case OP::IMPLIED::SEI:
-			code = Addressing::IMPLIED;
+			mode = Addressing::IMPLIED;
 			break;
 		default:
 			break;
 		}
 
-		return code;
+		return mode;
+	}
+	// Às
+	void CPU6502::Execute(const Addressing& mode, const type8 &op)
+	{
+		switch (mode)
+		{
+		case Addressing::IMPLIED:
+			break;
+		default:
+			break;
+		}
+	}
+	// Implied–½—ß‚ÌÀs
+	void CPU6502::ExecuteImplied(const type8& op)
+	{
+		switch (op)
+		{
+		case OP::IMPLIED::SEI:
+			m_status_reg = Status::I;
+			m_cycles += 2;
+			break;
+		default:
+			break;
+		}
 	}
 }
