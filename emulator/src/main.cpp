@@ -1,7 +1,6 @@
 #include <iostream>
 
-#include "Cartridge.hpp"
-#include "CPU6502.hpp"
+#include "./LamNES.hpp"
 
 int main(int argc, char* argv[])
 {
@@ -12,11 +11,8 @@ int main(int argc, char* argv[])
 		std::exit(EXIT_FAILURE);
 	}
 	
-	lamnes::Cartridge cartridge{};
-	cartridge.Init(argv[1]);
-
-	lamnes::CPU6502 cpu6502{};
-	cpu6502.Init();
+	lamnes::LamNES nes{};
+	nes.Init(argv[1]);
 
 	return 0;
 }
