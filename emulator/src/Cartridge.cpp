@@ -14,8 +14,14 @@ namespace lamnes
 		ParseRom(rom_data);
 	}
 
+	// PRG ROM取得
+	type8 Cartridge::GetPRGROM(const address& address)
+	{
+		return m_prg_rom[address];
+	}
+
 	// 解析したROMを出力
-	void Cartridge::DebugDump(const std::vector<type> &data, const std::string &output_path)
+	void Cartridge::DebugDump(const std::vector<type8> &data, const std::string &output_path)
 	{
 		std::ofstream file(output_path, std::ios::out | std::ios::app | std::ios::binary);
 		if (!file)
@@ -30,7 +36,7 @@ namespace lamnes
 	}
 
 	// ROMバイナリデータ取得
-	std::vector<Cartridge::type> Cartridge::ReadRom(const std::string& nes_file_path)
+	std::vector<type8> Cartridge::ReadRom(const std::string& nes_file_path)
 	{
 		std::ifstream ines(nes_file_path, std::ios::in | std::ios::binary);
 		if (!ines)
@@ -45,7 +51,7 @@ namespace lamnes
 		ines.seekg(0, std::ios::beg);
 
 		// 全読み込み
-		std::vector<type> data(size, 0);
+		std::vector<type8> data(size, 0);
 		ines.read(data.data(), size);
 
 		ines.close();
@@ -54,7 +60,7 @@ namespace lamnes
 	}
 
 	// ROMデータの解析
-	void Cartridge::ParseRom(std::vector<type>& rom_data)
+	void Cartridge::ParseRom(std::vector<type8>& rom_data)
 	{
 		auto itr = rom_data.begin();
 

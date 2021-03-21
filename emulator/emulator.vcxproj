@@ -151,6 +151,7 @@
     <ClInclude Include="src\Cartridge.hpp" />
     <ClInclude Include="src\CPU6502.hpp" />
     <ClInclude Include="src\DefStatusRegister.hpp" />
+    <ClInclude Include="src\DefType.hpp" />
     <ClInclude Include="src\LamNES.hpp" />
     <ClInclude Include="src\MainBuss.hpp" />
   </ItemGroup>

@@ -24,6 +24,12 @@ namespace lamnes
 	void CPU6502::Init(MainBuss* main_buss)
 	{
 		m_main_buss_ptr = main_buss;
+		if (!m_main_buss_ptr)
+		{
+			std::cerr << "CPU6502: MainBuss is nullptr." << std::endl;
+			std::exit(EXIT_FAILURE);
+		}
+
 		PowerUp();
 		Reset();
 	}
@@ -32,6 +38,7 @@ namespace lamnes
 	void CPU6502::Reset()
 	{
 		m_status_reg = Status::I; // 割り込み禁止
+		m_pc = Fetch(0xfffc);
 	}
 
 	/* private */
@@ -58,8 +65,13 @@ namespace lamnes
 		// 未実装
 	}
 	// 命令フェッチ
-	CPU6502::type16 CPU6502::Fetch(const type16& address)
+	address CPU6502::Fetch(const address& addr)
 	{
-		return type16();
+		type16 low = m_main_buss_ptr->Read(addr);
+		type16 high = m_main_buss_ptr->Read(addr + 1);
+
+		address op = ((high << 8) | low);
+
+		return op;
 	}
 }

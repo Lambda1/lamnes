@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "./DefStatusRegister.hpp"
+#include "./DefType.hpp"
 
 namespace lamnes
 {
@@ -13,8 +14,6 @@ namespace lamnes
 	class CPU6502
 	{
 	private:
-		using type8 = char;
-		using type16 = char16_t;
 
 	public:
 		CPU6502();
@@ -29,13 +28,13 @@ namespace lamnes
 		type8 m_idx_reg_x, m_idx_reg_y;
 		type8 m_stack_ptr;
 		type8 m_status_reg;
-		type16 m_pc;
+		address m_pc;
 
 		MainBuss* m_main_buss_ptr;
 
 		void PowerUp();
 
-		type16 Fetch(const type16 &address);
+		address Fetch(const address &addr);
 	};
 }
 
