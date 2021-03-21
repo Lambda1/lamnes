@@ -38,7 +38,7 @@ namespace lamnes
 	public:
 		Cartridge();
 
-		bool Init(const std::string &nes_file_path);
+		void Init(const std::string &nes_file_path);
 		
 		void DebugDump(const std::vector<type> &data, const std::string &output_path);
 	private:

@@ -8,16 +8,10 @@ namespace lamnes
 	}
 
 	// ‰Šú‰»
-	bool Cartridge::Init(const std::string& nes_file_path)
+	void Cartridge::Init(const std::string& nes_file_path)
 	{
 		auto rom_data = ReadRom(nes_file_path);
 		ParseRom(rom_data);
-
-		DebugDump(m_header, "../roms/test.nes");
-		DebugDump(m_prg_rom,"../roms/test.nes");
-		DebugDump(m_chr_rom,"../roms/test.nes");
-
-		return true;
 	}
 
 	// ‰ğÍ‚µ‚½ROM‚ğo—Í
