@@ -146,6 +146,7 @@
     <ClCompile Include="src\LamNES.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\MainBuss.cpp" />
+    <ClCompile Include="src\PPU.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Cartridge.hpp" />
@@ -156,6 +157,7 @@
     <ClInclude Include="src\DefType.hpp" />
     <ClInclude Include="src\LamNES.hpp" />
     <ClInclude Include="src\MainBuss.hpp" />
+    <ClInclude Include="src\PPU.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

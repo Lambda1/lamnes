@@ -1,12 +1,14 @@
 #include "./MainBuss.hpp"
 
 #include "./CPU6502.hpp"
+#include "./PPU.hpp"
 
 namespace lamnes
 {
 	MainBuss::MainBuss():
 		m_cartridge_ptr{nullptr},
-		m_cpu6502_ptr{nullptr}
+		m_cpu6502_ptr{nullptr},
+		m_ppu_ptr{nullptr}
 	{
 	}
 	MainBuss::~MainBuss()
@@ -14,10 +16,11 @@ namespace lamnes
 	}
 
 	// ‰Šú‰»ˆ—
-	void MainBuss::Init(Cartridge* cartridge_ptr, CPU6502* cpu6502_ptr)
+	void MainBuss::Init(Cartridge* cartridge_ptr, CPU6502* cpu6502_ptr, PPU *ppu_ptr)
 	{
 		m_cartridge_ptr = cartridge_ptr;
 		m_cpu6502_ptr = cpu6502_ptr;
+		m_ppu_ptr = ppu_ptr;
 	}
 
 	// ƒf[ƒ^“Ç‚İ‚İ
