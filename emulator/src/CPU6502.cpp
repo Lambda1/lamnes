@@ -95,13 +95,20 @@ namespace lamnes
 		switch (op)
 		{
 		case OP::IMPLIED::SEI:
+		case OP::IMPLIED::DEY:
 		case OP::IMPLIED::TXS:
+		case OP::IMPLIED::INX:
 			mode = Addressing::IMPLIED; break;
+		case OP::IMMEDIATE::LDY:
 		case OP::IMMEDIATE::LDX:
 		case OP::IMMEDIATE::LDA:
 			mode = Addressing::IMMEDIATE; break;
+		case OP::RELATIVE::BNE:
+			mode = Addressing::RELATIVE; break;
 		case OP::ABSOLUTE::STA:
 			mode = Addressing::ABSOLUTE; break;
+		case OP::ABSOLUTE_X::LDA:
+			mode = Addressing::ABSOLUTE_X; break;
 		default:
 			break;
 		}
@@ -158,9 +165,19 @@ namespace lamnes
 			m_status_reg = Status::I;
 			m_cycles += 2;
 			break;
+		case OP::IMPLIED::DEY:
+			--m_idx_reg_y;
+			SetZN(m_idx_reg_y);
+			m_cycles += 2;
+			break;
 		case OP::IMPLIED::TXS:
-			m_status_reg = Status::N | Status::Z;
 			m_stack_ptr_value = m_idx_reg_x;
+			SetZN(m_stack_ptr_value);
+			m_cycles += 2;
+			break;
+		case OP::IMPLIED::INX:
+			++m_idx_reg_x;
+			SetZN(m_idx_reg_x);
 			m_cycles += 2;
 			break;
 		default:
@@ -174,14 +191,19 @@ namespace lamnes
 	{
 		switch (op)
 		{
+		case OP::IMMEDIATE::LDY:
+			m_idx_reg_y = Fetch(m_pc++);
+			SetZN(m_idx_reg_y);
+			m_cycles += 2;
+			break;
 		case OP::IMMEDIATE::LDX:
-			m_status_reg = Status::N | Status::Z;
 			m_idx_reg_x = Fetch(m_pc++);
+			SetZN(m_idx_reg_x);
 			m_cycles += 2;
 			break;
 		case OP::IMMEDIATE::LDA:
-			m_status_reg = Status::N | Status::Z;
 			m_accumulator = Fetch(m_pc++);
+			SetZN(m_accumulator);
 			m_cycles += 2;
 			break;
 		default:
@@ -199,6 +221,15 @@ namespace lamnes
 	}
 	void CPU6502::ExecuteRelative(const type8& op)
 	{
+		switch (op)
+		{
+		case OP::RELATIVE::BNE:
+			m_main_buss_ptr->Write(GetAddressFromPC(), m_accumulator);
+			m_cycles += 4;
+			break;
+		default:
+			break;
+		}
 	}
 	void CPU6502::ExecuteAbsolute(const type8& op)
 	{
@@ -206,6 +237,7 @@ namespace lamnes
 		{
 		case OP::ABSOLUTE::STA:
 			m_main_buss_ptr->Write(GetAddressFromPC(), m_accumulator);
+			m_status_reg = 0;
 			m_cycles += 4;
 			break;
 		default:
@@ -214,6 +246,16 @@ namespace lamnes
 	}
 	void CPU6502::ExecuteAbsoluteX(const type8& op)
 	{
+		switch (op)
+		{
+		case OP::ABSOLUTE_X::LDA:
+			m_accumulator = m_main_buss_ptr->Read(GetAddressFromPC() + static_cast<address>(m_idx_reg_x & 0xff));
+			SetZN(m_accumulator);
+			m_cycles += 4;
+			break;
+		default:
+			break;
+		}
 	}
 	void CPU6502::ExecuteAbsoluteY(const type8& op)
 	{
@@ -226,6 +268,20 @@ namespace lamnes
 	}
 	void CPU6502::ExecuteIndirectY(const type8& op)
 	{
+	}
+
+	// フラグZ,Nの設定
+	void CPU6502::SetZN(const type8& val)
+	{
+		m_status_reg = 0;
+		if(val == 0)
+		{
+			m_status_reg |= Status::Z;
+		}
+		if ((val & Status::N) == Status::N)
+		{
+			m_status_reg |= Status::N;
+		}
 	}
 
 	// 2バイトのアドレス取得

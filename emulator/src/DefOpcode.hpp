@@ -10,13 +10,16 @@ namespace lamnes
 		namespace IMPLIED
 		{
 			inline static constexpr type8 SEI = static_cast<type8>(0x78);
+			inline static constexpr type8 DEY = static_cast<type8>(0x88);
 			inline static constexpr type8 TXS = static_cast<type8>(0x9a);
+			inline static constexpr type8 INX = static_cast<type8>(0xe8);
 		}
 		namespace ACCUMULATOR
 		{
 		}
 		namespace IMMEDIATE
 		{
+			inline static constexpr type8 LDY = static_cast<type8>(0xa0);
 			inline static constexpr type8 LDX = static_cast<type8>(0xa2);
 			inline static constexpr type8 LDA = static_cast<type8>(0xa9);
 		}
@@ -31,6 +34,7 @@ namespace lamnes
 		}
 		namespace RELATIVE
 		{
+			inline static constexpr type8 BNE = static_cast<type8>(0xd0);
 		}
 		namespace ABSOLUTE
 		{
@@ -38,6 +42,7 @@ namespace lamnes
 		}
 		namespace ABSOLUTE_X
 		{
+			inline static constexpr type8 LDA = static_cast<type8>(0xbd);
 		}
 		namespace ABSOLUTE_Y
 		{

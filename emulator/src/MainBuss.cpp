@@ -106,13 +106,13 @@ namespace lamnes
 		else if (addr < static_cast<address>(0xC000))
 		{
 			// PRG ROM LOW
-			std::cerr << "Write: PRG RPN LOW" << std::endl;
+			std::cerr << "Write: PRG ROM LOW" << std::endl;
 			std::exit(EXIT_FAILURE);
 		}
 		else
 		{
 			// PRG ROM HIGH
-			std::cerr << "Write: PRG RPN HIGH" << std::endl;
+			std::cerr << "Write: PRG ROM HIGH" << std::endl;
 			std::exit(EXIT_FAILURE);
 		}
 	}

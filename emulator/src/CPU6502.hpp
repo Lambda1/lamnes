@@ -59,6 +59,8 @@ namespace lamnes
 		void ExecuteIndirectX(const type8& op);
 		void ExecuteIndirectY(const type8& op);
 
+		void SetZN(const type8 &val);
+
 		address GetAddressFromPC();
 
 	};
