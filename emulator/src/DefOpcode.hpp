@@ -10,6 +10,7 @@ namespace lamnes
 		namespace IMPLIED
 		{
 			inline static constexpr type8 SEI = static_cast<type8>(0x78);
+			inline static constexpr type8 TXS = static_cast<type8>(0x9a);
 		}
 		namespace ACCUMULATOR
 		{
@@ -17,6 +18,7 @@ namespace lamnes
 		namespace IMMEDIATE
 		{
 			inline static constexpr type8 LDX = static_cast<type8>(0xa2);
+			inline static constexpr type8 LDA = static_cast<type8>(0xa9);
 		}
 		namespace ZEROPAGE
 		{

@@ -9,7 +9,7 @@ namespace lamnes
 	CPU6502::CPU6502() :
 		m_accumulator{ 0 },
 		m_idx_reg_x{ 0 }, m_idx_reg_y{ 0 },
-		m_stack_ptr{ 0 },
+		m_stack_ptr_value{ 0 },
 		m_status_reg{ 0 },
 		m_pc{ 0 },
 		m_cycles{ 0 },
@@ -46,9 +46,10 @@ namespace lamnes
 	{
 #if _DEBUG
 		std::cout << "\n" << "CYCLE : " << m_cycles << std::endl;
+		std::cout << "ACCUML: " << std::hex << static_cast<int>(m_accumulator & 0xff) << std::endl;
 		std::cout << "IDX   : " << std::hex << static_cast<int>(m_idx_reg_x & 0xff) << "," << static_cast<int>(m_idx_reg_y & 0xff) << std::endl;
 		std::cout << "PGCNT : " << std::hex << m_pc << std::endl;
-		std::cout << "STATUS: " << std::hex << static_cast<int>(m_status_reg) << std::endl;
+		std::cout << "STATUS: " << std::hex << static_cast<int>(m_status_reg & 0xff) << std::endl;
 #endif
 		type8 op = Fetch(m_pc++);
 		Addressing mode = Decode(op);
@@ -64,7 +65,7 @@ namespace lamnes
 		m_accumulator = static_cast<type8>(0x00);
 		m_idx_reg_x = static_cast<type8>(0x00);
 		m_idx_reg_y = static_cast<type8>(0x00);
-		m_stack_ptr = static_cast<type8>(0xfd);
+		m_stack_ptr_value = static_cast<type8>(0xfd);
 
 		// frame irq enable
 		// –¢ŽÀ‘•
@@ -91,9 +92,11 @@ namespace lamnes
 		switch (op)
 		{
 		case OP::IMPLIED::SEI:
+		case OP::IMPLIED::TXS:
 			mode = Addressing::IMPLIED;
 			break;
 		case OP::IMMEDIATE::LDX:
+		case OP::IMMEDIATE::LDA:
 			mode = Addressing::IMMEDIATE;
 			break;
 		default:
@@ -152,6 +155,11 @@ namespace lamnes
 			m_status_reg = Status::I;
 			m_cycles += 2;
 			break;
+		case OP::IMPLIED::TXS:
+			m_status_reg = Status::N | Status::Z;
+			m_stack_ptr_value = m_idx_reg_x;
+			m_cycles += 2;
+			break;
 		default:
 			break;
 		}
@@ -166,6 +174,11 @@ namespace lamnes
 		case OP::IMMEDIATE::LDX:
 			m_status_reg = Status::N | Status::Z;
 			m_idx_reg_x = Fetch(m_pc++);
+			m_cycles += 2;
+			break;
+		case OP::IMMEDIATE::LDA:
+			m_status_reg = Status::N | Status::Z;
+			m_accumulator = Fetch(m_pc++);
 			m_cycles += 2;
 			break;
 		default:

@@ -9,6 +9,10 @@
 #include "./DefOpcode.hpp"
 #include "./DefAddressing.hpp"
 
+#ifndef _DEBUG
+#define _DEBUG 1
+#endif
+
 namespace lamnes
 {
 	class MainBuss;
@@ -29,7 +33,7 @@ namespace lamnes
 	private:
 		type8 m_accumulator;
 		type8 m_idx_reg_x, m_idx_reg_y;
-		type8 m_stack_ptr;
+		type8 m_stack_ptr_value;
 		type8 m_status_reg;
 		address m_pc;
 
