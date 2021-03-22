@@ -48,10 +48,13 @@ namespace lamnes
 			m_ppu_mask = data;
 			break;
 		case OAMADDR:
+			std::exit(EXIT_FAILURE);
 			break;
 		case OAMDATA:
+			std::exit(EXIT_FAILURE);
 			break;
 		case PPUSCROLL:
+			std::exit(EXIT_FAILURE);
 			break;
 		case PPUADDR:
 			// 1âÒñ⁄: è„à 8bit, 2âÒñ⁄: â∫à 8bit
@@ -66,6 +69,7 @@ namespace lamnes
 			m_ppu_addr_write_check = !m_ppu_addr_write_check;
 			break;
 		case PPUDATA:
+			std::exit(EXIT_FAILURE);
 			break;
 		default:
 			std::cerr << "ERROR: PPU set invalid register." << std::endl;

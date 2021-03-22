@@ -224,9 +224,18 @@ namespace lamnes
 		switch (op)
 		{
 		case OP::RELATIVE::BNE:
-			m_main_buss_ptr->Write(GetAddressFromPC(), m_accumulator);
-			m_cycles += 4;
-			break;
+		{
+			type8 data = Fetch(m_pc++);
+			if (!isStatusFlag(Status::Z))
+			{
+				// data: [-128,127]
+				// m_pc: [0,65535]
+				// 相対アドレッシングを計算するため一時的に負数を扱うように型変換する．
+				m_pc = static_cast<address>(static_cast<int>(m_pc) + static_cast<int>(data));
+			}
+			m_cycles += 2;
+		}
+		break;
 		default:
 			break;
 		}
@@ -274,7 +283,7 @@ namespace lamnes
 	void CPU6502::SetZN(const type8& val)
 	{
 		m_status_reg = 0;
-		if(val == 0)
+		if (val == 0)
 		{
 			m_status_reg |= Status::Z;
 		}
@@ -282,6 +291,13 @@ namespace lamnes
 		{
 			m_status_reg |= Status::N;
 		}
+	}
+
+	// フラグ確認
+	bool CPU6502::isStatusFlag(const type8& flag)
+	{
+		if ((m_status_reg & flag) == flag) { return true; }
+		return false;
 	}
 
 	// 2バイトのアドレス取得
