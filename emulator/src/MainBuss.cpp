@@ -71,4 +71,49 @@ namespace lamnes
 		
 		return data;
 	}
+	// データ書き込み
+	void MainBuss::Write(const address& addr, const type8& data)
+	{
+		if (addr < static_cast<address>(0x0800))
+		{
+			// WRAM
+		}
+		else if (addr < static_cast<address>(0x2000))
+		{
+			// 0x0000-0x07ff MIRROR
+		}
+		else if (addr < static_cast<address>(0x2007))
+		{
+			// I/O PPU
+			m_ppu_ptr->SetRegister(addr, data);
+		}
+		else if (addr < static_cast<address>(0x4000))
+		{
+			// 0x2000-0x2007 MIRROR
+		}
+		else if (addr < static_cast<address>(0x401F))
+		{
+			// I/O APU
+		}
+		else if (addr < static_cast<address>(0x6000))
+		{
+			// 拡張RAM
+		}
+		else if (addr < static_cast<address>(0x8000))
+		{
+			// バッテリーバックアップRAM
+		}
+		else if (addr < static_cast<address>(0xC000))
+		{
+			// PRG ROM LOW
+			std::cerr << "Write: PRG RPN LOW" << std::endl;
+			std::exit(EXIT_FAILURE);
+		}
+		else
+		{
+			// PRG ROM HIGH
+			std::cerr << "Write: PRG RPN HIGH" << std::endl;
+			std::exit(EXIT_FAILURE);
+		}
+	}
 }

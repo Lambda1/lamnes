@@ -23,6 +23,7 @@ namespace lamnes
 		void Init(Cartridge *cartridge_ptr, CPU6502 *cpu6502_ptr, PPU *ppu_ptr);
 
 		type8 Read(const address &addr);
+		void Write(const address &addr, const type8 &data);
 
 	private:
 		Cartridge* m_cartridge_ptr;

@@ -39,21 +39,24 @@ namespace lamnes
 	void CPU6502::Reset()
 	{
 		m_status_reg = Status::I; // 割り込み禁止
-		m_pc = Fetch(0xfffc) | (Fetch(0xfffd) << 8);
+		m_pc = static_cast<address>(Fetch(0xfffc) & 0xff) | static_cast<address>(((Fetch(0xfffd) & 0xff) << 8));
 	}
 	// 処理実行
 	void CPU6502::Step()
 	{
-#if _DEBUG
+		type8 op = Fetch(m_pc++);
+		Addressing mode = Decode(op);
+		Execute(mode, op);
+	}
+
+	// デバッグ用メモリ内容表示
+	void CPU6502::DebugPrint()
+	{
 		std::cout << "\n" << "CYCLE : " << m_cycles << std::endl;
 		std::cout << "ACCUML: " << std::hex << static_cast<int>(m_accumulator & 0xff) << std::endl;
 		std::cout << "IDX   : " << std::hex << static_cast<int>(m_idx_reg_x & 0xff) << "," << static_cast<int>(m_idx_reg_y & 0xff) << std::endl;
 		std::cout << "PGCNT : " << std::hex << m_pc << std::endl;
 		std::cout << "STATUS: " << std::hex << static_cast<int>(m_status_reg & 0xff) << std::endl;
-#endif
-		type8 op = Fetch(m_pc++);
-		Addressing mode = Decode(op);
-		Execute(mode, op);
 	}
 
 	/* private */
@@ -93,12 +96,12 @@ namespace lamnes
 		{
 		case OP::IMPLIED::SEI:
 		case OP::IMPLIED::TXS:
-			mode = Addressing::IMPLIED;
-			break;
+			mode = Addressing::IMPLIED; break;
 		case OP::IMMEDIATE::LDX:
 		case OP::IMMEDIATE::LDA:
-			mode = Addressing::IMMEDIATE;
-			break;
+			mode = Addressing::IMMEDIATE; break;
+		case OP::ABSOLUTE::STA:
+			mode = Addressing::ABSOLUTE; break;
 		default:
 			break;
 		}
@@ -199,6 +202,15 @@ namespace lamnes
 	}
 	void CPU6502::ExecuteAbsolute(const type8& op)
 	{
+		switch (op)
+		{
+		case OP::ABSOLUTE::STA:
+			m_main_buss_ptr->Write(GetAddressFromPC(), m_accumulator);
+			m_cycles += 4;
+			break;
+		default:
+			break;
+		}
 	}
 	void CPU6502::ExecuteAbsoluteX(const type8& op)
 	{
@@ -214,5 +226,13 @@ namespace lamnes
 	}
 	void CPU6502::ExecuteIndirectY(const type8& op)
 	{
+	}
+
+	// 2バイトのアドレス取得
+	address CPU6502::GetAddressFromPC()
+	{
+		address low = static_cast<address>(Fetch(m_pc++) & 0xff);
+		address high = static_cast<address>(Fetch(m_pc++) & 0xff) << 8;
+		return (high | low);
 	}
 }

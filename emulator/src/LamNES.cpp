@@ -29,7 +29,13 @@ namespace lamnes
 		bool is_end = false;
 		while (!is_end)
 		{
+#if _DEBUG
+			m_cpu6502.DebugPrint();
+			m_ppu.DebugPrint();
+#endif
+
 			m_cpu6502.Step();
+			m_ppu.Step();
 		}
 	}
 }

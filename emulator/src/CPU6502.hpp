@@ -9,10 +9,6 @@
 #include "./DefOpcode.hpp"
 #include "./DefAddressing.hpp"
 
-#ifndef _DEBUG
-#define _DEBUG 1
-#endif
-
 namespace lamnes
 {
 	class MainBuss;
@@ -29,6 +25,8 @@ namespace lamnes
 		
 		void Reset();
 		void Step();
+
+		void DebugPrint();
 
 	private:
 		type8 m_accumulator;
@@ -60,6 +58,8 @@ namespace lamnes
 		void ExecuteIndirect(const type8& op);
 		void ExecuteIndirectX(const type8& op);
 		void ExecuteIndirectY(const type8& op);
+
+		address GetAddressFromPC();
 
 	};
 }

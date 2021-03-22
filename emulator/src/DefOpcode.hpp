@@ -34,6 +34,7 @@ namespace lamnes
 		}
 		namespace ABSOLUTE
 		{
+			inline static constexpr type8 STA = static_cast<type8>(0x8d);
 		}
 		namespace ABSOLUTE_X
 		{

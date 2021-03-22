@@ -1,6 +1,10 @@
 #ifndef __DEF_TYPE_HPP__
 #define __DEF_TYPE_HPP__
 
+#ifndef _DEBUG
+#define _DEBUG 1
+#endif
+
 namespace lamnes
 {
 	using type8 = char;
