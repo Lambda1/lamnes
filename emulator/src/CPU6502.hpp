@@ -42,7 +42,20 @@ namespace lamnes
 		type8 Fetch(const address &addr);
 		Addressing Decode(const type8 &op);
 		void Execute(const Addressing &mode, const type8 &op);
+
 		void ExecuteImplied(const type8& op);
+		void ExecuteAccumulator(const type8& op);
+		void ExecuteImmediate(const type8& op);
+		void ExecuteZeropage(const type8& op);
+		void ExecuteZeropageX(const type8& op);
+		void ExecuteZeropageY(const type8& op);
+		void ExecuteRelative(const type8& op);
+		void ExecuteAbsolute(const type8& op);
+		void ExecuteAbsoluteX(const type8& op);
+		void ExecuteAbsoluteY(const type8& op);
+		void ExecuteIndirect(const type8& op);
+		void ExecuteIndirectX(const type8& op);
+		void ExecuteIndirectY(const type8& op);
 
 	};
 }

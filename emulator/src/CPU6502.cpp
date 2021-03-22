@@ -12,8 +12,8 @@ namespace lamnes
 		m_stack_ptr{ 0 },
 		m_status_reg{ 0 },
 		m_pc{ 0 },
-		m_cycles{0},
-		m_main_buss_ptr{nullptr}
+		m_cycles{ 0 },
+		m_main_buss_ptr{ nullptr }
 	{
 	}
 
@@ -45,8 +45,9 @@ namespace lamnes
 	void CPU6502::Step()
 	{
 #if _DEBUG
-		std::cout << "\n" << "CYCLE: " << m_cycles << std::endl;
-		std::cout << "PGCNT: " << std::hex << m_pc << std::endl;
+		std::cout << "\n" << "CYCLE : " << m_cycles << std::endl;
+		std::cout << "IDX   : " << std::hex << static_cast<int>(m_idx_reg_x & 0xff) << "," << static_cast<int>(m_idx_reg_y & 0xff) << std::endl;
+		std::cout << "PGCNT : " << std::hex << m_pc << std::endl;
 		std::cout << "STATUS: " << std::hex << static_cast<int>(m_status_reg) << std::endl;
 #endif
 		type8 op = Fetch(m_pc++);
@@ -67,13 +68,13 @@ namespace lamnes
 
 		// frame irq enable
 		// 未実装
-		
+
 		// all channels disable
 		// 未実装
 
 		// 0x4000-0x400f = 0x00
 		// 未実装
-		
+
 		// 0x4010-0x4013 = 0x00
 		// 未実装
 	}
@@ -85,10 +86,6 @@ namespace lamnes
 	// 命令デコード
 	lamnes::Addressing CPU6502::Decode(const type8& op)
 	{
-#if _DEBUG
-		std::cerr << "\tDECODE: " << std::hex << static_cast<int>(op & 0xff) << std::endl;
-#endif
-
 		Addressing mode = Addressing::NONE;
 
 		switch (op)
@@ -96,24 +93,57 @@ namespace lamnes
 		case OP::IMPLIED::SEI:
 			mode = Addressing::IMPLIED;
 			break;
+		case OP::IMMEDIATE::LDX:
+			mode = Addressing::IMMEDIATE;
+			break;
 		default:
 			break;
 		}
 
+#if _DEBUG
+		std::cerr << "\tDECODE: " << std::hex << static_cast<int>(op & 0xff);
+		std::cerr << " : " << std::hex << static_cast<int>(mode) << std::endl;
+#endif
+
 		return mode;
 	}
 	// 実行
-	void CPU6502::Execute(const Addressing& mode, const type8 &op)
+	void CPU6502::Execute(const Addressing& mode, const type8& op)
 	{
 		switch (mode)
 		{
 		case Addressing::IMPLIED:
-			break;
+			ExecuteImplied(op);	break;
+		case Addressing::ACCUMULATOR:
+			ExecuteAccumulator(op);	break;
+		case Addressing::IMMEDIATE:
+			ExecuteImmediate(op); break;
+		case Addressing::ZEROPAGE:
+			ExecuteZeropage(op); break;
+		case Addressing::ZEROPAGE_X:
+			ExecuteZeropageX(op); break;
+		case Addressing::ZEROPAGE_Y:
+			ExecuteZeropageY(op); break;
+		case Addressing::RELATIVE:
+			ExecuteRelative(op); break;
+		case Addressing::ABSOLUTE:
+			ExecuteAbsolute(op); break;
+		case Addressing::ABSOLUTE_X:
+			ExecuteAbsoluteX(op); break;
+		case Addressing::ABSOLUTE_Y:
+			ExecuteAbsoluteY(op); break;
+		case Addressing::INDIRECT:
+			ExecuteIndirect(op); break;
+		case Addressing::INDIRECT_X:
+			ExecuteIndirectX(op); break;
+		case Addressing::INDIRECT_Y:
+			ExecuteIndirectY(op); break;
 		default:
+			std::cerr << "Opcode is not found." << std::endl;
+			std::exit(EXIT_FAILURE);
 			break;
 		}
 	}
-	// Implied命令の実行
 	void CPU6502::ExecuteImplied(const type8& op)
 	{
 		switch (op)
@@ -125,5 +155,51 @@ namespace lamnes
 		default:
 			break;
 		}
+	}
+	void CPU6502::ExecuteAccumulator(const type8& op)
+	{
+	}
+	void CPU6502::ExecuteImmediate(const type8& op)
+	{
+		switch (op)
+		{
+		case OP::IMMEDIATE::LDX:
+			m_status_reg = Status::N | Status::Z;
+			m_idx_reg_x = Fetch(m_pc++);
+			m_cycles += 2;
+			break;
+		default:
+			break;
+		}
+	}
+	void CPU6502::ExecuteZeropage(const type8& op)
+	{
+	}
+	void CPU6502::ExecuteZeropageX(const type8& op)
+	{
+	}
+	void CPU6502::ExecuteZeropageY(const type8& op)
+	{
+	}
+	void CPU6502::ExecuteRelative(const type8& op)
+	{
+	}
+	void CPU6502::ExecuteAbsolute(const type8& op)
+	{
+	}
+	void CPU6502::ExecuteAbsoluteX(const type8& op)
+	{
+	}
+	void CPU6502::ExecuteAbsoluteY(const type8& op)
+	{
+	}
+	void CPU6502::ExecuteIndirect(const type8& op)
+	{
+	}
+	void CPU6502::ExecuteIndirectX(const type8& op)
+	{
+	}
+	void CPU6502::ExecuteIndirectY(const type8& op)
+	{
 	}
 }
