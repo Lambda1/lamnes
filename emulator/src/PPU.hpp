@@ -39,6 +39,7 @@ namespace lamnes
 		address m_ppu_addr;
 		type8 m_ppu_data;
 
+		bool m_ppu_scroll_write_check;
 		bool m_ppu_addr_write_check;
 	};
 }

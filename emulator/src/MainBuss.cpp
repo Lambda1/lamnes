@@ -82,7 +82,7 @@ namespace lamnes
 		{
 			// 0x0000-0x07ff MIRROR
 		}
-		else if (addr < static_cast<address>(0x2007))
+		else if (addr < static_cast<address>(0x2008))
 		{
 			// I/O PPU
 			m_ppu_ptr->SetRegister(addr, data);
