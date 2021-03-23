@@ -2,7 +2,9 @@
 #define __PPU_HPP__
 
 #include <iostream>
+#include <vector>
 
+#include "./VRAM.hpp"
 #include "./DefType.hpp"
 
 namespace lamnes
@@ -29,6 +31,8 @@ namespace lamnes
 
 		void SetRegister(const address &addr, const type8 &data);
 
+		void Reset();
+
 	private:
 		type8 m_ppu_ctr;
 		type8 m_ppu_mask;
@@ -37,10 +41,13 @@ namespace lamnes
 		type8 m_oam_data;
 		type8 m_ppu_scroll;
 		address m_ppu_addr;
-		type8 m_ppu_data;
 
 		bool m_ppu_scroll_write_check;
 		bool m_ppu_addr_write_check;
+
+		VRAM m_vram;
+
+		void PowerUp();
 	};
 }
 

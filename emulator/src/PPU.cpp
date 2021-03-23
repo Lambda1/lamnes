@@ -5,9 +5,10 @@ namespace lamnes
 	PPU::PPU():
 		m_ppu_ctr{0}, m_ppu_mask{0}, m_ppu_status{0},
 		m_oam_addr{0}, m_oam_data{0},
-		m_ppu_scroll{0}, m_ppu_addr{0}, m_ppu_data{0},
+		m_ppu_scroll{0}, m_ppu_addr{0},
 		m_ppu_scroll_write_check(false),
-		m_ppu_addr_write_check(false)
+		m_ppu_addr_write_check(false),
+		m_vram{}
 	{
 	}
 	PPU::~PPU()
@@ -15,6 +16,8 @@ namespace lamnes
 	}
 	void PPU::Init()
 	{
+		PowerUp();
+		m_vram.Init();
 	}
 
 	// 処理実行
@@ -33,7 +36,6 @@ namespace lamnes
 		std::cout << "OAMDATA  : " << std::hex << static_cast<int>(m_oam_data & 0xff) << std::endl;
 		std::cout << "PPUSCROLL: " << std::hex << static_cast<int>(m_ppu_scroll & 0xff) << std::endl;
 		std::cout << "PPUADDR  : " << std::hex << static_cast<int>(m_ppu_addr & 0xffff) << std::endl;
-		std::cout << "PPUDATA  : " << std::hex << static_cast<int>(m_ppu_data & 0xff) << std::endl;
 #endif
 	}
 
@@ -81,12 +83,32 @@ namespace lamnes
 			m_ppu_addr_write_check = !m_ppu_addr_write_check;
 			break;
 		case PPUDATA:
-			m_ppu_data = data;
+			std::exit(EXIT_FAILURE);
 			break;
 		default:
 			std::cerr << "ERROR: PPU set invalid register." << std::endl;
 			std::exit(EXIT_FAILURE);
 			break;
 		}
+	}
+
+	// リセット処理
+	void PPU::Reset()
+	{
+		m_ppu_ctr = 0;
+		m_ppu_mask = 0;
+		m_ppu_status = 0; // randomらしい
+		m_ppu_scroll = 0;
+	}
+
+	// 電源投入時処理
+	void PPU::PowerUp()
+	{
+		m_ppu_ctr = 0;
+		m_ppu_mask = 0;
+		m_ppu_status = 0; // randomらしい
+		m_oam_addr = 0;
+		m_ppu_scroll = 0;
+		m_ppu_addr = 0;
 	}
 }
