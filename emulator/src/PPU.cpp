@@ -2,10 +2,10 @@
 
 namespace lamnes
 {
-	PPU::PPU():
-		m_ppu_ctr{0}, m_ppu_mask{0}, m_ppu_status{0},
-		m_oam_addr{0}, m_oam_data{0},
-		m_ppu_scroll{0}, m_ppu_addr{0},
+	PPU::PPU() :
+		m_ppu_ctr{ 0 }, m_ppu_mask{ 0 }, m_ppu_status{ 0 },
+		m_oam_addr{ 0 }, m_oam_data{ 0 },
+		m_ppu_scroll{ 0 }, m_ppu_addr{ 0 },
 		m_ppu_scroll_write_check(false),
 		m_ppu_addr_write_check(false),
 		m_vram{}
@@ -86,17 +86,19 @@ namespace lamnes
 		case PPUDATA:
 			if (m_ppu_addr < 0x3f00)
 			{
-				std::exit(EXIT_FAILURE);
+				// VRAM
+				auto adr_idx = (m_ppu_addr - static_cast<address>(0x2000));
+				m_vram.Write(adr_idx, data);
 			}
 			else if (m_ppu_addr < 0x3f20)
 			{
 				// パレット
 				auto adr_idx = (m_ppu_addr - static_cast<address>(0x3f00));
 				m_palette[adr_idx] = data;
-				// インクリメント
-				if ((m_ppu_ctr & PPUCTR) == PPUCTR) { m_ppu_addr += static_cast<type8>(0x20); }
-				else { m_ppu_addr += static_cast<type8>(0x01); }
 			}
+			// インクリメント
+			if ((m_ppu_ctr & PPUCTR) == PPUCTR) { m_ppu_addr += static_cast<type8>(0x20); }
+			else { m_ppu_addr += static_cast<type8>(0x01); }
 			break;
 		default:
 			std::cerr << "ERROR: PPU set invalid register." << std::endl;
