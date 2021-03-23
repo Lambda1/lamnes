@@ -92,7 +92,7 @@ namespace lamnes
 			{
 				// パレット
 				auto adr_idx = (m_ppu_addr - static_cast<address>(0x3f00));
-				m_vram.Write(adr_idx, data);
+				m_palette[adr_idx] = data;
 				// インクリメント
 				if ((m_ppu_ctr & PPUCTR) == PPUCTR) { m_ppu_addr += static_cast<type8>(0x20); }
 				else { m_ppu_addr += static_cast<type8>(0x01); }
