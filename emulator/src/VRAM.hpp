@@ -18,7 +18,7 @@ public:
 
 	void Init();
 
-	void Write(const address &addr, const type8 &val);
+	void Write(const address &addr, const type8 &data);
 
 private:
 	std::vector<type8> m_vram;

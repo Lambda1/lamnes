@@ -16,8 +16,8 @@ namespace lamnes
 	{
 	}
 	// ƒf[ƒ^‘‚«‚İ
-	void VRAM::Write(const address& addr, const type8& val)
+	void VRAM::Write(const address& addr, const type8& data)
 	{
-		m_vram[addr] = val;
+		m_vram[addr] = data;
 	}
 }

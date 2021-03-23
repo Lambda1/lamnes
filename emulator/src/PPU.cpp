@@ -10,6 +10,7 @@ namespace lamnes
 		m_ppu_addr_write_check(false),
 		m_vram{}
 	{
+		m_palette.resize(PALETTE_SIZE, 0);
 	}
 	PPU::~PPU()
 	{
@@ -83,7 +84,19 @@ namespace lamnes
 			m_ppu_addr_write_check = !m_ppu_addr_write_check;
 			break;
 		case PPUDATA:
-			std::exit(EXIT_FAILURE);
+			if (m_ppu_addr < 0x3f00)
+			{
+				std::exit(EXIT_FAILURE);
+			}
+			else if (m_ppu_addr < 0x3f20)
+			{
+				// パレット
+				auto adr_idx = (m_ppu_addr - static_cast<address>(0x3f00));
+				m_vram.Write(adr_idx, data);
+				// インクリメント
+				if ((m_ppu_ctr & PPUCTR) == PPUCTR) { m_ppu_addr += static_cast<type8>(0x20); }
+				else { m_ppu_addr += static_cast<type8>(0x01); }
+			}
 			break;
 		default:
 			std::cerr << "ERROR: PPU set invalid register." << std::endl;

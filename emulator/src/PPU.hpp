@@ -12,6 +12,8 @@ namespace lamnes
 	class PPU
 	{
 	private:
+		inline static constexpr size_t PALETTE_SIZE = 0x20;
+
 		inline static constexpr address PPUCTR = static_cast<address>(0x2000);
 		inline static constexpr address PPUMASK = static_cast<address>(0x2001);
 		inline static constexpr address PPUSTATUS = static_cast<address>(0x2002);
@@ -46,6 +48,7 @@ namespace lamnes
 		bool m_ppu_addr_write_check;
 
 		VRAM m_vram;
+		std::vector<type8> m_palette;
 
 		void PowerUp();
 	};
