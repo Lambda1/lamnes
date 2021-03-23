@@ -75,11 +75,11 @@ namespace lamnes
 			// 1‰ñ–Ú: ãˆÊ8bit, 2‰ñ–Ú: ‰ºˆÊ8bit
 			if (!m_ppu_addr_write_check)
 			{
-				m_ppu_addr = (static_cast<address>(data) << 8);
+				m_ppu_addr = ((static_cast<address>(data) & 0xff) << 8);
 			}
 			else
 			{
-				m_ppu_addr |= static_cast<address>(data);
+				m_ppu_addr |= static_cast<address>((static_cast<address>(data) & 0xff));
 			}
 			m_ppu_addr_write_check = !m_ppu_addr_write_check;
 			break;
