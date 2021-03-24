@@ -9,10 +9,15 @@
 
 namespace lamnes
 {
+	class MainBuss;
+
 	class PPU
 	{
 	private:
 		inline static constexpr size_t PALETTE_SIZE = 0x20;
+
+		inline static constexpr size_t ONE_LINE_CLOCK = 341;
+		inline static constexpr size_t STORE_DATA_TIMING_LINE = 8;
 
 		inline static constexpr address PPUCTR = static_cast<address>(0x2000);
 		inline static constexpr address PPUMASK = static_cast<address>(0x2001);
@@ -22,11 +27,12 @@ namespace lamnes
 		inline static constexpr address PPUSCROLL = static_cast<address>(0x2005);
 		inline static constexpr address PPUADDR = static_cast<address>(0x2006);
 		inline static constexpr address PPUDATA = static_cast<address>(0x2007);
+
 	public:
 		PPU();
 		~PPU();
 
-		void Init();
+		void Init(MainBuss *main_buss_ptr);
 		void Step();
 
 		void DebugPrint();
@@ -36,6 +42,9 @@ namespace lamnes
 		void Reset();
 
 	private:
+		unsigned long long int m_cycles;
+		unsigned long long int m_lines;
+
 		type8 m_ppu_ctr;
 		type8 m_ppu_mask;
 		type8 m_ppu_status;
@@ -49,6 +58,8 @@ namespace lamnes
 
 		VRAM m_vram;
 		std::vector<type8> m_palette;
+
+		MainBuss* m_main_buss_ptr;
 
 		void PowerUp();
 	};

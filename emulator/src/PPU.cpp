@@ -1,22 +1,28 @@
 #include "PPU.hpp"
 
+#include "./MainBuss.hpp"
+
 namespace lamnes
 {
 	PPU::PPU() :
+		m_cycles{ 0 }, m_lines{ 0 },
 		m_ppu_ctr{ 0 }, m_ppu_mask{ 0 }, m_ppu_status{ 0 },
 		m_oam_addr{ 0 }, m_oam_data{ 0 },
 		m_ppu_scroll{ 0 }, m_ppu_addr{ 0 },
 		m_ppu_scroll_write_check(false),
 		m_ppu_addr_write_check(false),
-		m_vram{}
+		m_vram{},
+		m_main_buss_ptr{nullptr}
 	{
 		m_palette.resize(PALETTE_SIZE, 0);
 	}
 	PPU::~PPU()
 	{
 	}
-	void PPU::Init()
+	void PPU::Init(MainBuss *main_buss_ptr)
 	{
+		m_main_buss_ptr = main_buss_ptr;
+
 		PowerUp();
 		m_vram.Init();
 	}
@@ -24,12 +30,21 @@ namespace lamnes
 	// 処理実行
 	void PPU::Step()
 	{
+		++m_cycles;
+
+		if (m_cycles > 65536)
+		{
+			m_vram.DebugRenderNameTable(0);
+			m_vram.DebugRenderAttributeTable(0);
+			std::exit(EXIT_FAILURE);
+		}
 	}
 
 	// デバッグ用メモリ内容表示
 	void PPU::DebugPrint()
 	{
 #if _DEBUG
+		std::cerr << "PPU CYCL : " << std::dec << static_cast<int>(m_cycles) << std::endl;
 		std::cout << "PPUCTR   : " << std::hex << static_cast<int>(m_ppu_ctr & 0xff) << std::endl;
 		std::cout << "PPUMASK  : " << std::hex << static_cast<int>(m_ppu_mask & 0xff) << std::endl;
 		std::cout << "PPUSTATUS: " << std::hex << static_cast<int>(m_ppu_status & 0xff) << std::endl;

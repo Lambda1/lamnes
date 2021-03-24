@@ -20,7 +20,7 @@ namespace lamnes
 		
 		m_cartridge.Init(rom_path);
 		m_cpu6502.Init(&m_main_buss);
-		m_ppu.Init();
+		m_ppu.Init(&m_main_buss);
 	}
 
 	// ƒƒCƒ“ˆ—
@@ -30,11 +30,12 @@ namespace lamnes
 		while (!is_end)
 		{
 #if _DEBUG
-			m_cpu6502.DebugPrint();
-			m_ppu.DebugPrint();
+			//m_cpu6502.DebugPrint();
+			//m_ppu.DebugPrint();
 #endif
-
 			m_cpu6502.Step();
+			m_ppu.Step();
+			m_ppu.Step();
 			m_ppu.Step();
 		}
 	}

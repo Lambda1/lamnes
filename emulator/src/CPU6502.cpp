@@ -113,12 +113,6 @@ namespace lamnes
 		default:
 			break;
 		}
-
-#if _DEBUG
-		std::cerr << "\tDECODE: " << std::hex << static_cast<int>(op & 0xff);
-		std::cerr << " : " << std::hex << static_cast<int>(mode) << std::endl;
-#endif
-
 		return mode;
 	}
 	// ŽÀs
