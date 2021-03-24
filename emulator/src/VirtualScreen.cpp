@@ -30,7 +30,7 @@ namespace lamnes
 			for (size_t j = 0; j < SCREEN_WIDTH; ++j)
 			{
 				auto val = (int)(m_screen_buffer[i * SCREEN_WIDTH + j].r & 0xff);
-				std::cout << std::setw(2) << val;
+				std::cout << val;
 			}
 			std::cout << std::endl;
 		}

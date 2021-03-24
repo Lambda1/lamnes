@@ -240,29 +240,51 @@ namespace lamnes
 				auto y = m_render_y / ONE_SPRITE_UNIT;
 				const address vram_addr = static_cast<address>(y * TILE_WIDTH + j);
 				const address pattern_addr = static_cast<address>(m_vram.Read(vram_addr) * ONE_SPRITE_BYTE_UNIT);
-				
-				auto data = m_cartridge_ptr->ReadCHRROM(pattern_addr);
 
-				if (data == 0)
-				{
-					col r{10, 10, 10};
-					RenderSpriteOneLine(j, m_render_y, data, r);
-				}
-				else
-				{
-					col r{99, 99, 99};
-					RenderSpriteOneLine(j, m_render_y, data, r);
-				}
+				auto data1 = m_cartridge_ptr->ReadCHRROM(pattern_addr + i);
+				auto data2 = m_cartridge_ptr->ReadCHRROM(pattern_addr + i + SPRITE_UNDER_RELATIVE_BYTE);
+
+				char data[ONE_SPRITE_UNIT] = {};
+				ConvertSpriteOneLine(data1, data2, data);
+
+				RenderSpriteOneLine(j, m_render_y, data, m_palette_table[0]);
 			}
 			++m_render_y;
 		}
 	}
 	// 1スプライトの1ラインを描画
-	void PPU::RenderSpriteOneLine(const size_t& x, const size_t& y, const type8& chr, const col& color)
+	void PPU::RenderSpriteOneLine(const size_t& x, const size_t& y, const char *chr, const col& color)
 	{
 		for (size_t j = 0; j < ONE_SPRITE_UNIT; ++j)
 		{
-			m_virtual_screen.Render(x * ONE_SPRITE_UNIT + j, y, color.r, color.g, color.b);
+			if (chr[j] == 0)
+			{
+				col r{ 1, 1, 1 };
+				m_virtual_screen.Render(x * ONE_SPRITE_UNIT + j, y, r.r, r.r, r.r);
+			}
+			else if (chr[j] == 1)
+			{
+				col r{ 2, 2, 2 };
+				m_virtual_screen.Render(x * ONE_SPRITE_UNIT + j, y, r.r, r.r, r.r);
+			}
+			else
+			{
+				col r{ 3, 3, 3 };
+				m_virtual_screen.Render(x * ONE_SPRITE_UNIT + j, y, r.r, r.r, r.r);
+			}
 		}
+	}
+
+	// 1ライン分の2つのスプライトを1つのスプライトに変換
+	void PPU::ConvertSpriteOneLine(const type8& upper, const type8& lower, char* data)
+	{
+		data[0] = ((upper & 0x80) >> 7) + ((lower & 0x80) >> 7);
+		data[1] = ((upper & 0x40) >> 6) + ((lower & 0x40) >> 6);
+		data[2] = ((upper & 0x20) >> 5) + ((lower & 0x20) >> 5);
+		data[3] = ((upper & 0x10) >> 4) + ((lower & 0x10) >> 4);
+		data[4] = ((upper & 0x08) >> 3) + ((lower & 0x04) >> 3);
+		data[5] = ((upper & 0x04) >> 2) + ((lower & 0x03) >> 2);
+		data[6] = ((upper & 0x02) >> 1) + ((lower & 0x02) >> 1);
+		data[7] = ((upper & 0x01) >> 0) + ((lower & 0x01) >> 0);
 	}
 }
