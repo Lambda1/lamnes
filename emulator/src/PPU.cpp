@@ -117,7 +117,8 @@ namespace lamnes
 			{
 				// 1ÉtÉåÅ[ÉÄ (341*262 = 89342)
 				DebugPrint();
-				m_virtual_screen.Output();
+				//m_virtual_screen.Output();
+				m_virtual_screen.OutputPPM();
 				std::exit(EXIT_FAILURE);
 
 				m_cycles = 0;
@@ -261,10 +262,11 @@ namespace lamnes
 	{
 		const size_t tile_block_id = (((y / ONE_SPRITE_UNIT) % 2) << 1) | (x % 2);
 		const size_t palette_id = (attrib_val >> (tile_block_id*2)) & 0x03;
-
 		for (size_t j = 0; j < ONE_SPRITE_UNIT; ++j)
 		{
-			col color = m_palette_table[m_palette[palette_id]];
+			const size_t idx = palette_id * 4 + chr[j];
+			const col color = m_palette_table[m_palette[idx]];
+			
 			m_virtual_screen.Render(x * ONE_SPRITE_UNIT + j, y, color.r ,color.g, color.b);
 		}
 	}

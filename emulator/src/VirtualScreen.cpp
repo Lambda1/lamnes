@@ -35,4 +35,18 @@ namespace lamnes
 			std::cout << std::endl;
 		}
 	}
+	void VirtualScreen::OutputPPM()
+	{
+		std::cout << "P3" << std::endl;
+		std::cout << SCREEN_WIDTH << " " << SCREEN_HEIGHT << std::endl;
+		std::cout << "255" << std::endl;
+		for (size_t i = 0; i < SCREEN_HEIGHT; ++i)
+		{
+			for (size_t j = 0; j < SCREEN_WIDTH; ++j)
+			{
+				auto val = m_screen_buffer[i * SCREEN_WIDTH + j];
+				std::cout << (int)val.r << " " << (int)val.g << " " << (int)val.b << std::endl;
+			}
+		}
+	}
 }

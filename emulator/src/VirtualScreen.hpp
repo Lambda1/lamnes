@@ -31,6 +31,7 @@ namespace lamnes
 		void Render(const size_t &x, const size_t &y, const type &r, const type &g, const type &b);
 
 		void Output();
+		void OutputPPM();
 
 	private:
 		std::vector<col> m_screen_buffer;
