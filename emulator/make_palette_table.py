@@ -16,5 +16,5 @@ for val in palette.split():
 
 	cnt = cnt + 1
 	if cnt%3 == 0:
-		print(type_name, '({', r, ',', g, ',', b, '})')
+		print(type_name, '(col{', r, ',', g, ',', b, '});')
 		cnt = 0

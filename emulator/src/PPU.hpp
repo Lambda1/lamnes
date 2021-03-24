@@ -17,8 +17,11 @@ namespace lamnes
 	private:
 		struct col
 		{
-			char r, g, b;
-			col(const char &red, const char &green, const char &blue): r(red), g(green), b(blue) {}
+			using type = unsigned char;
+			type r, g, b;
+			col(const int &red, const int &green, const int &blue):
+				r(static_cast<type>(red)), g(static_cast<type>(green)), b(static_cast<type>(blue))
+			{}
 		};
 
 		inline static constexpr size_t PALETTE_SIZE = 0x20;

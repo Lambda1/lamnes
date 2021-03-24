@@ -11,7 +11,8 @@ namespace lamnes
 	private:
 		struct col
 		{
-			char r, g, b;
+			using type = unsigned char;
+			type r, g, b;
 			col():	r(0), g(0), b(0) {}
 			~col(){}
 		};

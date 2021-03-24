@@ -18,16 +18,63 @@ namespace lamnes
 		m_palette.resize(PALETTE_SIZE, 0);
 
 		// パレットテーブル作成
-		m_palette_table.push_back({84 , 84 , 84 });
-		m_palette_table.push_back({0  , 36 , 116});
-		m_palette_table.push_back({8  , 16 , 144});
-		m_palette_table.push_back({48 , 0  , 136});
-		m_palette_table.push_back({68 , 0  , 100});
-		m_palette_table.push_back({92 , 0  , 48 });
-		m_palette_table.push_back({84 , 4  , 0  });
-		m_palette_table.push_back({60 , 24 , 0  });
-		m_palette_table.push_back({32 , 42 , 0  });
-		m_palette_table.push_back({32 , 42 , 0  });
+		m_palette_table.emplace_back(col{ 84 , 84 , 84 });
+		m_palette_table.emplace_back(col{ 0 , 30 , 116 });
+		m_palette_table.emplace_back(col{ 8 , 16 , 144 });
+		m_palette_table.emplace_back(col{ 48 , 0 , 136 });
+		m_palette_table.emplace_back(col{ 68 , 0 , 100 });
+		m_palette_table.emplace_back(col{ 92 , 0 , 48 });
+		m_palette_table.emplace_back(col{ 84 , 4 , 0 });
+		m_palette_table.emplace_back(col{ 60 , 24 , 0 });
+		m_palette_table.emplace_back(col{ 32 , 42 , 0 });
+		m_palette_table.emplace_back(col{ 8 , 58 , 0 });
+		m_palette_table.emplace_back(col{ 0 , 64 , 0 });
+		m_palette_table.emplace_back(col{ 0 , 60 , 0 });
+		m_palette_table.emplace_back(col{ 0 , 50 , 60 });
+		m_palette_table.emplace_back(col{ 0 , 0 , 0 });
+
+		m_palette_table.emplace_back(col{ 152 , 150 , 152 });
+		m_palette_table.emplace_back(col{ 8 , 76 , 196 });
+		m_palette_table.emplace_back(col{ 48 , 50 , 236 });
+		m_palette_table.emplace_back(col{ 92 , 30 , 228 });
+		m_palette_table.emplace_back(col{ 136 , 20 , 176 });
+		m_palette_table.emplace_back(col{ 160 , 20 , 100 });
+		m_palette_table.emplace_back(col{ 152 , 34 , 32 });
+		m_palette_table.emplace_back(col{ 120 , 60 , 0 });
+		m_palette_table.emplace_back(col{ 84 , 90 , 0 });
+		m_palette_table.emplace_back(col{ 40 , 114 , 0 });
+		m_palette_table.emplace_back(col{ 8 , 124 , 0 });
+		m_palette_table.emplace_back(col{ 0 , 118 , 40 });
+		m_palette_table.emplace_back(col{ 0 , 102 , 120 });
+		m_palette_table.emplace_back(col{ 0 , 0 , 0 });
+		m_palette_table.emplace_back(col{ 236 , 238 , 236 });
+		m_palette_table.emplace_back(col{ 76 , 154 , 236 });
+		m_palette_table.emplace_back(col{ 120 , 124 , 236 });
+		m_palette_table.emplace_back(col{ 176 , 98 , 236 });
+		m_palette_table.emplace_back(col{ 228 , 84 , 236 });
+		m_palette_table.emplace_back(col{ 236 , 88 , 180 });
+		m_palette_table.emplace_back(col{ 236 , 106 , 100 });
+		m_palette_table.emplace_back(col{ 212 , 136 , 32 });
+		m_palette_table.emplace_back(col{ 160 , 170 , 0 });
+		m_palette_table.emplace_back(col{ 116 , 196 , 0 });
+		m_palette_table.emplace_back(col{ 76 , 208 , 32 });
+		m_palette_table.emplace_back(col{ 56 , 204 , 108 });
+		m_palette_table.emplace_back(col{ 56 , 180 , 204 });
+		m_palette_table.emplace_back(col{ 60 , 60 , 60 });
+		m_palette_table.emplace_back(col{ 236 , 238 , 236 });
+		m_palette_table.emplace_back(col{ 168 , 204 , 236 });
+		m_palette_table.emplace_back(col{ 188 , 188 , 236 });
+		m_palette_table.emplace_back(col{ 212 , 178 , 236 });
+		m_palette_table.emplace_back(col{ 236 , 174 , 236 });
+		m_palette_table.emplace_back(col{ 236 , 174 , 212 });
+		m_palette_table.emplace_back(col{ 236 , 180 , 176 });
+		m_palette_table.emplace_back(col{ 228 , 196 , 144 });
+		m_palette_table.emplace_back(col{ 204 , 210 , 120 });
+		m_palette_table.emplace_back(col{ 180 , 222 , 120 });
+		m_palette_table.emplace_back(col{ 168 , 226 , 144 });
+		m_palette_table.emplace_back(col{ 152 , 226 , 180 });
+		m_palette_table.emplace_back(col{ 160 , 214 , 228 });
+		m_palette_table.emplace_back(col{ 160 , 162 , 160 });
 	}
 	PPU::~PPU()
 	{
@@ -184,4 +231,4 @@ namespace lamnes
 		m_ppu_scroll = 0;
 		m_ppu_addr = 0;
 	}
-	}
+}
