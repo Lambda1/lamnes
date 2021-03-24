@@ -233,6 +233,7 @@ namespace lamnes
 	// 8ライン描画
 	void PPU::RenderEightLine()
 	{
+		std::vector<char> sprite_line(ONE_SPRITE_UNIT, 0);
 		for (size_t i = 0; i < STORE_DATA_TIMING_LINE; ++i)
 		{
 			for (size_t j = 0; j < TILE_WIDTH; ++j)
@@ -241,19 +242,18 @@ namespace lamnes
 				const address vram_addr = static_cast<address>(y * TILE_WIDTH + j);
 				const address pattern_addr = static_cast<address>(m_vram.Read(vram_addr) * ONE_SPRITE_BYTE_UNIT);
 
-				auto data1 = m_cartridge_ptr->ReadCHRROM(pattern_addr + i);
-				auto data2 = m_cartridge_ptr->ReadCHRROM(pattern_addr + i + SPRITE_UNDER_RELATIVE_BYTE);
+				auto layer1 = m_cartridge_ptr->ReadCHRROM(static_cast<address>(pattern_addr + i));
+				auto layer2 = m_cartridge_ptr->ReadCHRROM(static_cast<address>(pattern_addr + i + SPRITE_UNDER_RELATIVE_BYTE));
 
-				char data[ONE_SPRITE_UNIT] = {};
-				ConvertSpriteOneLine(data1, data2, data);
+				ConvertSpriteOneLine(layer1, layer2, sprite_line);
 
-				RenderSpriteOneLine(j, m_render_y, data, m_palette_table[0]);
+				RenderSpriteOneLine(j, m_render_y, sprite_line, m_palette_table[0]);
 			}
 			++m_render_y;
 		}
 	}
 	// 1スプライトの1ラインを描画
-	void PPU::RenderSpriteOneLine(const size_t& x, const size_t& y, const char *chr, const col& color)
+	void PPU::RenderSpriteOneLine(const size_t& x, const size_t& y, const std::vector<char> &chr, const col& color)
 	{
 		for (size_t j = 0; j < ONE_SPRITE_UNIT; ++j)
 		{
@@ -276,15 +276,16 @@ namespace lamnes
 	}
 
 	// 1ライン分の2つのスプライトを1つのスプライトに変換
-	void PPU::ConvertSpriteOneLine(const type8& upper, const type8& lower, char* data)
+	// 00, 01, 10, 11の4種類
+	void PPU::ConvertSpriteOneLine(const type8& layer1, const type8& layer2, std::vector<char> &sprite_line)
 	{
-		data[0] = ((upper & 0x80) >> 7) + ((lower & 0x80) >> 7);
-		data[1] = ((upper & 0x40) >> 6) + ((lower & 0x40) >> 6);
-		data[2] = ((upper & 0x20) >> 5) + ((lower & 0x20) >> 5);
-		data[3] = ((upper & 0x10) >> 4) + ((lower & 0x10) >> 4);
-		data[4] = ((upper & 0x08) >> 3) + ((lower & 0x04) >> 3);
-		data[5] = ((upper & 0x04) >> 2) + ((lower & 0x03) >> 2);
-		data[6] = ((upper & 0x02) >> 1) + ((lower & 0x02) >> 1);
-		data[7] = ((upper & 0x01) >> 0) + ((lower & 0x01) >> 0);
+		sprite_line[0] = ((layer2 & 0x80) >> 6) | ((layer1 & 0x80) >> 7);
+		sprite_line[1] = ((layer2 & 0x40) >> 5) | ((layer1 & 0x40) >> 6);
+		sprite_line[2] = ((layer2 & 0x20) >> 4) | ((layer1 & 0x20) >> 5);
+		sprite_line[3] = ((layer2 & 0x10) >> 3) | ((layer1 & 0x10) >> 4);
+		sprite_line[4] = ((layer2 & 0x08) >> 2) | ((layer1 & 0x04) >> 3);
+		sprite_line[5] = ((layer2 & 0x04) >> 1) | ((layer1 & 0x03) >> 2);
+		sprite_line[6] = ((layer2 & 0x02) >> 0) | ((layer1 & 0x02) >> 1);
+		sprite_line[7] = ((layer2 & 0x01) << 1) | ((layer1 & 0x01) >> 0);
 	}
 }
