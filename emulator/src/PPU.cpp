@@ -247,31 +247,25 @@ namespace lamnes
 
 				ConvertSpriteOneLine(layer1, layer2, sprite_line);
 
-				RenderSpriteOneLine(j, m_render_y, sprite_line, m_palette_table[0]);
+				// 属性読み出し
+				const address attribute_addr = 0x23C0 + vram_addr / (ONE_SPRITE_BYTE_UNIT * 2);
+				const type8 attribute_val = m_vram.Read(vram_addr);
+
+				RenderSpriteOneLine(j, m_render_y, sprite_line, attribute_val);
 			}
 			++m_render_y;
 		}
 	}
 	// 1スプライトの1ラインを描画
-	void PPU::RenderSpriteOneLine(const size_t& x, const size_t& y, const std::vector<char> &chr, const col& color)
+	void PPU::RenderSpriteOneLine(const size_t& x, const size_t& y, const std::vector<char> &chr, const type8 &attrib_val)
 	{
+		const size_t tile_block_id = (((y / ONE_SPRITE_UNIT) % 2) << 1) | (x % 2);
+		const size_t palette_id = (attrib_val >> (tile_block_id*2)) & 0x03;
+
 		for (size_t j = 0; j < ONE_SPRITE_UNIT; ++j)
 		{
-			if (chr[j] == 0)
-			{
-				col r{ 1, 1, 1 };
-				m_virtual_screen.Render(x * ONE_SPRITE_UNIT + j, y, r.r, r.r, r.r);
-			}
-			else if (chr[j] == 1)
-			{
-				col r{ 2, 2, 2 };
-				m_virtual_screen.Render(x * ONE_SPRITE_UNIT + j, y, r.r, r.r, r.r);
-			}
-			else
-			{
-				col r{ 3, 3, 3 };
-				m_virtual_screen.Render(x * ONE_SPRITE_UNIT + j, y, r.r, r.r, r.r);
-			}
+			col color = m_palette_table[m_palette[palette_id]];
+			m_virtual_screen.Render(x * ONE_SPRITE_UNIT + j, y, color.r ,color.g, color.b);
 		}
 	}
 

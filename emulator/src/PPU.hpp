@@ -88,7 +88,7 @@ namespace lamnes
 		void PowerUp();
 		
 		void RenderEightLine();
-		void RenderSpriteOneLine(const size_t &x, const size_t &y, const std::vector<char> &chr, const col &color);
+		void RenderSpriteOneLine(const size_t &x, const size_t &y, const std::vector<char> &chr, const type8 &attrib_val);
 		void ConvertSpriteOneLine(const type8 &layer1, const type8 &layer2, std::vector<char> &sprite_line);
 	};
 }
