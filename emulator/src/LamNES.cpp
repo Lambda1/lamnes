@@ -20,7 +20,7 @@ namespace lamnes
 		
 		m_cartridge.Init(rom_path);
 		m_cpu6502.Init(&m_main_buss);
-		m_ppu.Init(&m_main_buss);
+		m_ppu.Init(&m_cartridge);
 	}
 
 	// ƒƒCƒ“ˆ—

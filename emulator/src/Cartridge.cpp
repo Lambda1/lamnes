@@ -15,9 +15,14 @@ namespace lamnes
 	}
 
 	// PRG ROMæ“¾
-	type8 Cartridge::GetPRGROM(const address& address)
+	type8 Cartridge::ReadPRGROM(const address& address)
 	{
 		return m_prg_rom[address];
+	}
+	// CHR ROMæ“¾
+	type8 Cartridge::ReadCHRROM(const address& address)
+	{
+		return m_chr_rom[address];
 	}
 
 	// ‰ğÍ‚µ‚½ROM‚ğo—Í

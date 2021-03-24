@@ -19,6 +19,7 @@ public:
 
 	void Init();
 
+	type8 Read(const address& addr);
 	void Write(const address &addr, const type8 &data);
 
 	void DebugRenderNameTable(const int &num);

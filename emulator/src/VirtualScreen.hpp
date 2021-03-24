@@ -2,6 +2,7 @@
 #define __VIRTUAL_SCREEN_HPP__
 
 #include <iostream>
+#include <iomanip>
 #include <vector>
 
 namespace lamnes
@@ -9,9 +10,10 @@ namespace lamnes
 	class VirtualScreen
 	{
 	private:
+		using type = unsigned char;
+		
 		struct col
 		{
-			using type = unsigned char;
 			type r, g, b;
 			col():	r(0), g(0), b(0) {}
 			~col(){}
@@ -25,6 +27,10 @@ namespace lamnes
 		~VirtualScreen();
 
 		void Init();
+
+		void Render(const size_t &x, const size_t &y, const type &r, const type &g, const type &b);
+
+		void Output();
 
 	private:
 		std::vector<col> m_screen_buffer;

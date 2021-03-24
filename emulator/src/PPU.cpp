@@ -1,7 +1,5 @@
 #include "PPU.hpp"
 
-#include "./MainBuss.hpp"
-
 namespace lamnes
 {
 	PPU::PPU() :
@@ -12,8 +10,8 @@ namespace lamnes
 		m_ppu_scroll_write_check(false),
 		m_ppu_addr_write_check(false),
 		m_vram{},
-		m_main_buss_ptr{ nullptr },
-		m_virtual_screen{}
+		m_cartridge_ptr{ nullptr },
+		m_virtual_screen{}, m_render_y{ 0 }
 	{
 		m_palette.resize(PALETTE_SIZE, 0);
 
@@ -32,7 +30,6 @@ namespace lamnes
 		m_palette_table.emplace_back(col{ 0 , 60 , 0 });
 		m_palette_table.emplace_back(col{ 0 , 50 , 60 });
 		m_palette_table.emplace_back(col{ 0 , 0 , 0 });
-
 		m_palette_table.emplace_back(col{ 152 , 150 , 152 });
 		m_palette_table.emplace_back(col{ 8 , 76 , 196 });
 		m_palette_table.emplace_back(col{ 48 , 50 , 236 });
@@ -79,9 +76,9 @@ namespace lamnes
 	PPU::~PPU()
 	{
 	}
-	void PPU::Init(MainBuss* main_buss_ptr)
+	void PPU::Init(Cartridge* cartridge_ptr)
 	{
-		m_main_buss_ptr = main_buss_ptr;
+		m_cartridge_ptr = cartridge_ptr;
 
 		PowerUp();
 		m_vram.Init();
@@ -91,43 +88,44 @@ namespace lamnes
 	// 処理実行
 	void PPU::Step()
 	{
+		// 初めの[0]を除外するために，サイクル数をカウントする前にラインを加算．
 		++m_cycles;
-
-		// 1ライン
-		if ((m_cycles % ONE_LINE_CLOCK) == 0)
+		if (m_cycles >= ONE_LINE_CLOCK)
 		{
-			++m_lines;
-		}
-
-		if (m_lines < VISIBLE_SCANLINE_TIMING_LINE)
-		{
-			// 8ライン描画
-			if ((m_lines % STORE_DATA_TIMING_LINE) == 0)
-			{
-			}
-		}
-		else if (m_lines < POST_RENDER_SCANLINE_TIMING_LINE)
-		{
-			// post-render
-		}
-		else if (m_lines < VBLANK_TIMING_LINE)
-		{
-			// VBLANK
-			m_ppu_status |= static_cast<type8>(0x80);
-		}
-		else if (m_lines < PRE_RENDER_SCANLINE_TIMING_LINE)
-		{
-			// pre-render
-		}
-		else
-		{
-			// 1フレーム (341*262 = 89342)
-			DebugPrint();
-			std::exit(EXIT_FAILURE);
-
 			m_cycles = 0;
-			m_lines = 0;
-			m_ppu_status ^= 0x80; // reset vblank
+			++m_lines;
+
+			if (m_lines <= VISIBLE_SCANLINE_TIMING_LINE)
+			{
+				// 8ライン描画
+				if ((m_lines % STORE_DATA_TIMING_LINE) == 0) { RenderEightLine(); }
+			}
+			else if (m_lines <= POST_RENDER_SCANLINE_TIMING_LINE)
+			{
+				// post-render
+			}
+			else if (m_lines <= VBLANK_TIMING_LINE)
+			{
+				// VBLANK
+				m_ppu_status |= static_cast<type8>(0x80);
+			}
+			else if (m_lines <= PRE_RENDER_SCANLINE_TIMING_LINE)
+			{
+				// pre-render
+			}
+			else
+			{
+				// 1フレーム (341*262 = 89342)
+				DebugPrint();
+				m_virtual_screen.Output();
+				std::exit(EXIT_FAILURE);
+
+				m_cycles = 0;
+				m_lines = 0;
+				m_ppu_status ^= 0x80; // reset vblank
+
+				m_render_y = 0;
+			}
 		}
 	}
 
@@ -230,5 +228,41 @@ namespace lamnes
 		m_oam_addr = 0;
 		m_ppu_scroll = 0;
 		m_ppu_addr = 0;
+	}
+
+	// 8ライン描画
+	void PPU::RenderEightLine()
+	{
+		for (size_t i = 0; i < STORE_DATA_TIMING_LINE; ++i)
+		{
+			for (size_t j = 0; j < TILE_WIDTH; ++j)
+			{
+				auto y = m_render_y / ONE_SPRITE_UNIT;
+				const address vram_addr = static_cast<address>(y * TILE_WIDTH + j);
+				const address pattern_addr = static_cast<address>(m_vram.Read(vram_addr) * ONE_SPRITE_BYTE_UNIT);
+				
+				auto data = m_cartridge_ptr->ReadCHRROM(pattern_addr);
+
+				if (data == 0)
+				{
+					col r{10, 10, 10};
+					RenderSpriteOneLine(j, m_render_y, data, r);
+				}
+				else
+				{
+					col r{99, 99, 99};
+					RenderSpriteOneLine(j, m_render_y, data, r);
+				}
+			}
+			++m_render_y;
+		}
+	}
+	// 1スプライトの1ラインを描画
+	void PPU::RenderSpriteOneLine(const size_t& x, const size_t& y, const type8& chr, const col& color)
+	{
+		for (size_t j = 0; j < ONE_SPRITE_UNIT; ++j)
+		{
+			m_virtual_screen.Render(x * ONE_SPRITE_UNIT + j, y, color.r, color.g, color.b);
+		}
 	}
 }

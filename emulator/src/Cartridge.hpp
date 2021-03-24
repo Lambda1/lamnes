@@ -40,7 +40,8 @@ namespace lamnes
 
 		void Init(const std::string &nes_file_path);
 
-		type8 GetPRGROM(const address& address);
+		type8 ReadPRGROM(const address& address);
+		type8 ReadCHRROM(const address& address);
 		
 		void DebugDump(const std::vector<type8> &data, const std::string &output_path);
 	private:

@@ -15,6 +15,11 @@ namespace lamnes
 	void VRAM::Init()
 	{
 	}
+	// データ読み込み
+	type8 VRAM::Read(const address& addr)
+	{
+		return m_vram[addr];
+	}
 	// データ書き込み
 	void VRAM::Write(const address& addr, const type8& data)
 	{

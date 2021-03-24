@@ -60,13 +60,13 @@ namespace lamnes
 		{
 			// PRG ROM LOW
 			address conv_addr = (addr - static_cast<address>(0x8000));
-			data = m_cartridge_ptr->GetPRGROM(conv_addr);
+			data = m_cartridge_ptr->ReadPRGROM(conv_addr);
 		}
 		else
 		{
 			// PRG ROM HIGH
 			address conv_addr = (addr - static_cast<address>(0x8000));
-			data = m_cartridge_ptr->GetPRGROM(conv_addr);
+			data = m_cartridge_ptr->ReadPRGROM(conv_addr);
 		}
 		
 		return data;

@@ -7,11 +7,10 @@
 #include "./VRAM.hpp"
 #include "./DefType.hpp"
 #include "./VirtualScreen.hpp"
+#include "./Cartridge.hpp"
 
 namespace lamnes
 {
-	class MainBuss;
-
 	class PPU
 	{
 	private:
@@ -25,13 +24,19 @@ namespace lamnes
 		};
 
 		inline static constexpr size_t PALETTE_SIZE = 0x20;
+		inline static constexpr size_t ONE_SPRITE_UNIT = 8;
+		
+		inline static constexpr size_t ONE_SPRITE_BYTE_UNIT = 16;
+
+		inline static constexpr size_t SCREEN_WIDTH = 256;
+		inline static constexpr size_t TILE_WIDTH = 32;
 
 		inline static constexpr size_t ONE_LINE_CLOCK = 341;
 		inline static constexpr size_t STORE_DATA_TIMING_LINE = 8;
-		inline static constexpr size_t VISIBLE_SCANLINE_TIMING_LINE = 241;
+		inline static constexpr size_t VISIBLE_SCANLINE_TIMING_LINE = 240;
 		inline static constexpr size_t POST_RENDER_SCANLINE_TIMING_LINE = 241;
-		inline static constexpr size_t VBLANK_TIMING_LINE = 261;
-		inline static constexpr size_t PRE_RENDER_SCANLINE_TIMING_LINE = 262;
+		inline static constexpr size_t VBLANK_TIMING_LINE = 260;
+		inline static constexpr size_t PRE_RENDER_SCANLINE_TIMING_LINE = 261;
 
 		inline static constexpr address PPUCTR = static_cast<address>(0x2000);
 		inline static constexpr address PPUMASK = static_cast<address>(0x2001);
@@ -46,7 +51,7 @@ namespace lamnes
 		PPU();
 		~PPU();
 
-		void Init(MainBuss *main_buss_ptr);
+		void Init(Cartridge *cartridge_ptr);
 		void Step();
 
 		void DebugPrint();
@@ -74,11 +79,15 @@ namespace lamnes
 		std::vector<type8> m_palette;
 		std::vector<col> m_palette_table;
 
-		MainBuss* m_main_buss_ptr;
+		Cartridge *m_cartridge_ptr;
 
 		VirtualScreen m_virtual_screen;
+		size_t m_render_y;
 
 		void PowerUp();
+		
+		void RenderEightLine();
+		void RenderSpriteOneLine(const size_t &x, const size_t &y, const type8 &chr, const col &color);
 	};
 }
 
