@@ -52,11 +52,11 @@ namespace lamnes
 	// デバッグ用メモリ内容表示
 	void CPU6502::DebugPrint()
 	{
-		std::cout << "\n" << "CYCLE : " << std::dec << m_cycles << std::endl;
-		std::cout << "ACCUML: " << std::hex << static_cast<int>(m_accumulator & 0xff) << std::endl;
-		std::cout << "IDX   : " << std::hex << static_cast<int>(m_idx_reg_x & 0xff) << "," << static_cast<int>(m_idx_reg_y & 0xff) << std::endl;
-		std::cout << "PGCNT : " << std::hex << m_pc << std::endl;
-		std::cout << "STATUS: " << std::hex << static_cast<int>(m_status_reg & 0xff) << std::endl;
+		std::cerr << "\n" << "CYCLE : " << std::dec << m_cycles << std::endl;
+		std::cerr << "ACCUML: " << std::hex << static_cast<int>(m_accumulator & 0xff) << std::endl;
+		std::cerr << "IDX   : " << std::hex << static_cast<int>(m_idx_reg_x & 0xff) << "," << static_cast<int>(m_idx_reg_y & 0xff) << std::endl;
+		std::cerr << "PGCNT : " << std::hex << m_pc << std::endl;
+		std::cerr << "STATUS: " << std::hex << static_cast<int>(m_status_reg & 0xff) << std::endl;
 	}
 
 	/* private */

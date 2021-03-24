@@ -12,9 +12,22 @@ namespace lamnes
 		m_ppu_scroll_write_check(false),
 		m_ppu_addr_write_check(false),
 		m_vram{},
-		m_main_buss_ptr{ nullptr }
+		m_main_buss_ptr{ nullptr },
+		m_virtual_screen{}
 	{
 		m_palette.resize(PALETTE_SIZE, 0);
+
+		// パレットテーブル作成
+		m_palette_table.push_back({84 , 84 , 84 });
+		m_palette_table.push_back({0  , 36 , 116});
+		m_palette_table.push_back({8  , 16 , 144});
+		m_palette_table.push_back({48 , 0  , 136});
+		m_palette_table.push_back({68 , 0  , 100});
+		m_palette_table.push_back({92 , 0  , 48 });
+		m_palette_table.push_back({84 , 4  , 0  });
+		m_palette_table.push_back({60 , 24 , 0  });
+		m_palette_table.push_back({32 , 42 , 0  });
+		m_palette_table.push_back({32 , 42 , 0  });
 	}
 	PPU::~PPU()
 	{
@@ -25,6 +38,7 @@ namespace lamnes
 
 		PowerUp();
 		m_vram.Init();
+		m_virtual_screen.Init();
 	}
 
 	// 処理実行
@@ -73,7 +87,6 @@ namespace lamnes
 	// デバッグ用メモリ内容表示
 	void PPU::DebugPrint()
 	{
-#if _DEBUG
 		std::cerr << "PPU CYCL : " << std::dec << static_cast<int>(m_cycles) << std::endl;
 		std::cerr << "PPU LINES: " << std::dec << static_cast<int>(m_lines) << std::endl;
 		std::cerr << "PPUCTR   : " << std::hex << static_cast<int>(m_ppu_ctr & 0xff) << std::endl;
@@ -83,7 +96,6 @@ namespace lamnes
 		std::cerr << "OAMDATA  : " << std::hex << static_cast<int>(m_oam_data & 0xff) << std::endl;
 		std::cerr << "PPUSCROLL: " << std::hex << static_cast<int>(m_ppu_scroll & 0xff) << std::endl;
 		std::cerr << "PPUADDR  : " << std::hex << static_cast<int>(m_ppu_addr & 0xffff) << std::endl;
-#endif
 	}
 
 	// レジスタ設定

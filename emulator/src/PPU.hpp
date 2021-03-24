@@ -6,6 +6,7 @@
 
 #include "./VRAM.hpp"
 #include "./DefType.hpp"
+#include "./VirtualScreen.hpp"
 
 namespace lamnes
 {
@@ -14,6 +15,12 @@ namespace lamnes
 	class PPU
 	{
 	private:
+		struct col
+		{
+			char r, g, b;
+			col(const char &red, const char &green, const char &blue): r(red), g(green), b(blue) {}
+		};
+
 		inline static constexpr size_t PALETTE_SIZE = 0x20;
 
 		inline static constexpr size_t ONE_LINE_CLOCK = 341;
@@ -62,8 +69,11 @@ namespace lamnes
 
 		VRAM m_vram;
 		std::vector<type8> m_palette;
+		std::vector<col> m_palette_table;
 
 		MainBuss* m_main_buss_ptr;
+
+		VirtualScreen m_virtual_screen;
 
 		void PowerUp();
 	};
