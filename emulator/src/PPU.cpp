@@ -12,14 +12,14 @@ namespace lamnes
 		m_ppu_scroll_write_check(false),
 		m_ppu_addr_write_check(false),
 		m_vram{},
-		m_main_buss_ptr{nullptr}
+		m_main_buss_ptr{ nullptr }
 	{
 		m_palette.resize(PALETTE_SIZE, 0);
 	}
 	PPU::~PPU()
 	{
 	}
-	void PPU::Init(MainBuss *main_buss_ptr)
+	void PPU::Init(MainBuss* main_buss_ptr)
 	{
 		m_main_buss_ptr = main_buss_ptr;
 
@@ -32,11 +32,41 @@ namespace lamnes
 	{
 		++m_cycles;
 
-		if (m_cycles > 65536)
+		// 1ライン
+		if ((m_cycles % ONE_LINE_CLOCK) == 0)
 		{
-			m_vram.DebugRenderNameTable(0);
-			m_vram.DebugRenderAttributeTable(0);
+			++m_lines;
+		}
+
+		if (m_lines < VISIBLE_SCANLINE_TIMING_LINE)
+		{
+			// 8ライン描画
+			if ((m_lines % STORE_DATA_TIMING_LINE) == 0)
+			{
+			}
+		}
+		else if (m_lines < POST_RENDER_SCANLINE_TIMING_LINE)
+		{
+			// post-render
+		}
+		else if (m_lines < VBLANK_TIMING_LINE)
+		{
+			// VBLANK
+			m_ppu_status |= static_cast<type8>(0x80);
+		}
+		else if (m_lines < PRE_RENDER_SCANLINE_TIMING_LINE)
+		{
+			// pre-render
+		}
+		else
+		{
+			// 1フレーム (341*262 = 89342)
+			DebugPrint();
 			std::exit(EXIT_FAILURE);
+
+			m_cycles = 0;
+			m_lines = 0;
+			m_ppu_status ^= 0x80; // reset vblank
 		}
 	}
 
@@ -45,13 +75,14 @@ namespace lamnes
 	{
 #if _DEBUG
 		std::cerr << "PPU CYCL : " << std::dec << static_cast<int>(m_cycles) << std::endl;
-		std::cout << "PPUCTR   : " << std::hex << static_cast<int>(m_ppu_ctr & 0xff) << std::endl;
-		std::cout << "PPUMASK  : " << std::hex << static_cast<int>(m_ppu_mask & 0xff) << std::endl;
-		std::cout << "PPUSTATUS: " << std::hex << static_cast<int>(m_ppu_status & 0xff) << std::endl;
-		std::cout << "OAMADDR  : " << std::hex << static_cast<int>(m_oam_addr & 0xffff) << std::endl;
-		std::cout << "OAMDATA  : " << std::hex << static_cast<int>(m_oam_data & 0xff) << std::endl;
-		std::cout << "PPUSCROLL: " << std::hex << static_cast<int>(m_ppu_scroll & 0xff) << std::endl;
-		std::cout << "PPUADDR  : " << std::hex << static_cast<int>(m_ppu_addr & 0xffff) << std::endl;
+		std::cerr << "PPU LINES: " << std::dec << static_cast<int>(m_lines) << std::endl;
+		std::cerr << "PPUCTR   : " << std::hex << static_cast<int>(m_ppu_ctr & 0xff) << std::endl;
+		std::cerr << "PPUMASK  : " << std::hex << static_cast<int>(m_ppu_mask & 0xff) << std::endl;
+		std::cerr << "PPUSTATUS: " << std::hex << static_cast<int>(m_ppu_status & 0xff) << std::endl;
+		std::cerr << "OAMADDR  : " << std::hex << static_cast<int>(m_oam_addr & 0xffff) << std::endl;
+		std::cerr << "OAMDATA  : " << std::hex << static_cast<int>(m_oam_data & 0xff) << std::endl;
+		std::cerr << "PPUSCROLL: " << std::hex << static_cast<int>(m_ppu_scroll & 0xff) << std::endl;
+		std::cerr << "PPUADDR  : " << std::hex << static_cast<int>(m_ppu_addr & 0xffff) << std::endl;
 #endif
 	}
 
@@ -141,4 +172,4 @@ namespace lamnes
 		m_ppu_scroll = 0;
 		m_ppu_addr = 0;
 	}
-}
+	}

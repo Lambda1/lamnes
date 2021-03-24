@@ -18,6 +18,10 @@ namespace lamnes
 
 		inline static constexpr size_t ONE_LINE_CLOCK = 341;
 		inline static constexpr size_t STORE_DATA_TIMING_LINE = 8;
+		inline static constexpr size_t VISIBLE_SCANLINE_TIMING_LINE = 241;
+		inline static constexpr size_t POST_RENDER_SCANLINE_TIMING_LINE = 241;
+		inline static constexpr size_t VBLANK_TIMING_LINE = 261;
+		inline static constexpr size_t PRE_RENDER_SCANLINE_TIMING_LINE = 262;
 
 		inline static constexpr address PPUCTR = static_cast<address>(0x2000);
 		inline static constexpr address PPUMASK = static_cast<address>(0x2001);
