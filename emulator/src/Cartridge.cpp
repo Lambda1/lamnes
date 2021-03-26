@@ -12,6 +12,28 @@ namespace lamnes
 	{
 		auto rom_data = ReadRom(nes_file_path);
 		ParseRom(rom_data);
+
+		/*
+		int cnt = 0;
+		for (int j = 0;j < m_chr_rom.size();++j)
+		{
+			auto data = m_chr_rom[j];
+			for (int i = 7; i >= 0; --i)
+			{
+				auto xz = (data >> i) & 0x01;
+				if (xz != 0) std::cout << xz;
+				else std::cout << " ";
+			}
+			++cnt;
+			std::cout << std::endl;
+			if (cnt >= 8)
+			{
+				cnt = 0;
+				std::cout << std::endl;
+			}
+		}
+		std::exit(EXIT_FAILURE);
+		*/
 	}
 
 	// PRG ROMŽæ“¾

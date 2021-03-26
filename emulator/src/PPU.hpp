@@ -25,6 +25,7 @@ namespace lamnes
 
 		inline static constexpr size_t PALETTE_SIZE = 0x20;
 		inline static constexpr size_t ONE_SPRITE_UNIT = 8;
+		inline static constexpr size_t ONE_ATTRIBUTE_UNIT = 16;
 		
 		inline static constexpr size_t SPRITE_UNDER_RELATIVE_BYTE = 8;
 		inline static constexpr size_t ONE_SPRITE_BYTE_UNIT = 16;

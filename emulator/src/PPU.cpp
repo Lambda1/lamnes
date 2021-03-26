@@ -244,7 +244,7 @@ namespace lamnes
 				const address pattern_addr = static_cast<address>(m_vram.Read(vram_addr) * ONE_SPRITE_BYTE_UNIT);
 
 				auto layer1 = m_cartridge_ptr->ReadCHRROM(static_cast<address>(pattern_addr + i));
-				auto layer2 = m_cartridge_ptr->ReadCHRROM(static_cast<address>(pattern_addr + i + SPRITE_UNDER_RELATIVE_BYTE));
+				auto layer2 = m_cartridge_ptr->ReadCHRROM(static_cast<address>(pattern_addr + i + ONE_SPRITE_UNIT));
 
 				ConvertSpriteOneLine(layer1, layer2, sprite_line);
 
@@ -260,12 +260,13 @@ namespace lamnes
 	// 1スプライトの1ラインを描画
 	void PPU::RenderSpriteOneLine(const size_t& x, const size_t& y, const std::vector<char> &chr, const type8 &attrib_val)
 	{
-		const size_t tile_block_id = (((y / ONE_SPRITE_UNIT) % 2) << 1) | (x % 2);
-		const size_t palette_id = (attrib_val >> (tile_block_id*2)) & 0x03;
+		const size_t tile_block_id = (((y / ONE_ATTRIBUTE_UNIT) % 2) << 1) | ((x/ONE_ATTRIBUTE_UNIT) % 2);
+		const size_t palette_id = (attrib_val >> (tile_block_id * 2)) & 0x03;
+		
 		for (size_t j = 0; j < ONE_SPRITE_UNIT; ++j)
 		{
 			const size_t idx = palette_id * 4 + chr[j];
-			const col color = m_palette_table[m_palette[idx]];
+			const col color = colors[m_palette[idx]];
 			
 			m_virtual_screen.Render(x * ONE_SPRITE_UNIT + j, y, color.r ,color.g, color.b);
 		}
@@ -275,13 +276,13 @@ namespace lamnes
 	// 00, 01, 10, 11の4種類
 	void PPU::ConvertSpriteOneLine(const type8& layer1, const type8& layer2, std::vector<char> &sprite_line)
 	{
-		sprite_line[0] = ((layer2 & 0x80) >> 6) | ((layer1 & 0x80) >> 7);
-		sprite_line[1] = ((layer2 & 0x40) >> 5) | ((layer1 & 0x40) >> 6);
-		sprite_line[2] = ((layer2 & 0x20) >> 4) | ((layer1 & 0x20) >> 5);
-		sprite_line[3] = ((layer2 & 0x10) >> 3) | ((layer1 & 0x10) >> 4);
-		sprite_line[4] = ((layer2 & 0x08) >> 2) | ((layer1 & 0x04) >> 3);
-		sprite_line[5] = ((layer2 & 0x04) >> 1) | ((layer1 & 0x03) >> 2);
-		sprite_line[6] = ((layer2 & 0x02) >> 0) | ((layer1 & 0x02) >> 1);
-		sprite_line[7] = ((layer2 & 0x01) << 1) | ((layer1 & 0x01) >> 0);
+		sprite_line[0] = ((layer2 >> 6) & 0x02) | ((layer1 & 0x80) >> 7);
+		sprite_line[1] = ((layer2 >> 5) & 0x02) | ((layer1 & 0x40) >> 6);
+		sprite_line[2] = ((layer2 >> 4) & 0x02) | ((layer1 & 0x20) >> 5);
+		sprite_line[3] = ((layer2 >> 3) & 0x02) | ((layer1 & 0x10) >> 4);
+		sprite_line[4] = ((layer2 >> 2) & 0x02) | ((layer1 & 0x08) >> 3);
+		sprite_line[5] = ((layer2 >> 1) & 0x02) | ((layer1 & 0x04) >> 2);
+		sprite_line[6] = ((layer2 >> 0) & 0x02) | ((layer1 & 0x02) >> 1);
+		sprite_line[7] = ((layer2 << 1) & 0x02) | ((layer1 & 0x01) >> 0);
 	}
 }
