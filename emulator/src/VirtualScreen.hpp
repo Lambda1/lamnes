@@ -2,6 +2,7 @@
 #define __VIRTUAL_SCREEN_HPP__
 
 #include <iostream>
+#include <fstream>
 #include <iomanip>
 #include <vector>
 
@@ -31,7 +32,7 @@ namespace lamnes
 		void Render(const size_t &x, const size_t &y, const type &r, const type &g, const type &b);
 
 		void Output();
-		void OutputPPM();
+		void OutputPPM(const std::string &output_path);
 
 	private:
 		std::vector<col> m_screen_buffer;

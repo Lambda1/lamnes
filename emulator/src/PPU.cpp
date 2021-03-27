@@ -117,8 +117,8 @@ namespace lamnes
 			{
 				// 1フレーム (341*262 = 89342)
 				DebugPrint();
-				//m_virtual_screen.Output();
-				m_virtual_screen.OutputPPM();
+				m_virtual_screen.Output();
+				m_virtual_screen.OutputPPM("./output.ppm");
 				std::exit(EXIT_FAILURE);
 
 				m_cycles = 0;
@@ -249,8 +249,8 @@ namespace lamnes
 				ConvertSpriteOneLine(layer1, layer2, sprite_line);
 
 				// 属性読み出し
-				const address attribute_addr = 0x23C0 + vram_addr / (ONE_SPRITE_BYTE_UNIT * 2);
-				const type8 attribute_val = m_vram.Read(vram_addr);
+				const address attribute_addr = 0x03C0 + vram_addr / (ONE_SPRITE_BYTE_UNIT * 2);
+				const type8 attribute_val = m_vram.Read(attribute_addr);
 
 				RenderSpriteOneLine(j, m_render_y, sprite_line, attribute_val);
 			}
@@ -260,13 +260,13 @@ namespace lamnes
 	// 1スプライトの1ラインを描画
 	void PPU::RenderSpriteOneLine(const size_t& x, const size_t& y, const std::vector<char> &chr, const type8 &attrib_val)
 	{
-		const size_t tile_block_id = (((y / ONE_ATTRIBUTE_UNIT) % 2) << 1) | ((x/ONE_ATTRIBUTE_UNIT) % 2);
+		const size_t tile_block_id = (((y / ONE_ATTRIBUTE_UNIT) % 2) << 1) | ((x / ONE_ATTRIBUTE_UNIT) % 2);
 		const size_t palette_id = (attrib_val >> (tile_block_id * 2)) & 0x03;
 		
 		for (size_t j = 0; j < ONE_SPRITE_UNIT; ++j)
 		{
 			const size_t idx = palette_id * 4 + chr[j];
-			const col color = colors[m_palette[idx]];
+			const col color = m_palette_table[m_palette[idx]];
 			
 			m_virtual_screen.Render(x * ONE_SPRITE_UNIT + j, y, color.r ,color.g, color.b);
 		}
