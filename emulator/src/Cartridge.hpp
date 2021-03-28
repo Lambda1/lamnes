@@ -6,6 +6,7 @@
 #include <vector>
 #include <string>
 #include <algorithm>
+#include <cmath>
 
 #include "./DefType.hpp"
 
@@ -35,6 +36,16 @@ namespace lamnes
 		inline static constexpr type8 FLAGS7_NES2_0 = static_cast<type8>(0x0C);
 		inline static constexpr type8 FLAGS7_MAPPER = static_cast<type8>(0xF0);
 
+		// Sprite関係
+		inline static constexpr size_t SPRITE_BYTE = 16;       // 1スプライト当たりのバイト数
+		inline static constexpr size_t SPRITE_PIXEL_SIZE = 8;  // 1スプライトの横ピクセル数
+		inline static constexpr size_t SPRITE_LINE_STRIDE = 8; // 1スプライトの横幅におけるCHR ROMのオフセット数
+		struct Sprite
+		{
+			type8 data[SPRITE_PIXEL_SIZE * SPRITE_PIXEL_SIZE];
+			Sprite(): data{} {}
+		};
+
 	public:
 		Cartridge();
 
@@ -44,6 +55,8 @@ namespace lamnes
 		type8 ReadCHRROM(const address& address);
 		
 		void DebugDump(const std::vector<type8> &data, const std::string &output_path);
+		void DebugDumpCHRROMToPPM(const std::string &file_path);
+
 	private:
 		std::vector<type8> m_header;
 
@@ -53,8 +66,11 @@ namespace lamnes
 		std::vector<type8> m_inst_rom;
 		std::vector<type8> m_prom_rom;
 
+		std::vector<Sprite> m_sprite;
+
 		std::vector<type8> ReadRom(const std::string &nes_file_path);
 		void ParseRom(std::vector<type8> &rom_data);
+		void BuildSprite();
 	};
 }
 

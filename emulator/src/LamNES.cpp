@@ -26,6 +26,8 @@ namespace lamnes
 	// ƒƒCƒ“ˆ—
 	void LamNES::MainLoop()
 	{
+		m_cartridge.DebugDumpCHRROMToPPM("./chr_rom_data.ppm");
+
 		bool is_end = false;
 		while (!is_end)
 		{
