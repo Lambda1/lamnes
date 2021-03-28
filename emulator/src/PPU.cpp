@@ -220,6 +220,23 @@ namespace lamnes
 		m_ppu_scroll = 0;
 	}
 
+	// “Ç‚İ‚İ
+	type8 PPU::Read(const address& addr)
+	{
+		type8 data = 0;
+		if (addr == PPUSTATUS)
+		{
+			data = m_ppu_status;
+			m_ppu_status &= ~0x01;
+		}
+		else
+		{
+			std::cerr << "PPU READ" << std::endl;
+			std::exit(EXIT_FAILURE);
+		}
+		return data;
+	}
+
 	// “dŒ¹“Š“üˆ—
 	void PPU::PowerUp()
 	{

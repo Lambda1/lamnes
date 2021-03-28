@@ -2,7 +2,7 @@
 #define __DEF_TYPE_HPP__
 
 #ifndef _DEBUG
-#define DEBUG 1
+#define _DEBUG 1
 #endif
 
 namespace lamnes

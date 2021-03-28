@@ -64,6 +64,8 @@ namespace lamnes
 
 		void Reset();
 
+		type8 Read(const address& addr);
+
 	private:
 		unsigned long long int m_cycles;
 		unsigned long long int m_lines;

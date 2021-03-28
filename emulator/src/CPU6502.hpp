@@ -60,6 +60,7 @@ namespace lamnes
 		void ExecuteIndirectY(const type8& op);
 
 		void SetZN(const type8 &val);
+		void SetC(const type8 &val);
 		bool isStatusFlag(const type8& flag);
 
 		address GetAddressFromPC();

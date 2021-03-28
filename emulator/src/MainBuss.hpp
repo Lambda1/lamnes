@@ -29,6 +29,8 @@ namespace lamnes
 		Cartridge* m_cartridge_ptr;
 		CPU6502* m_cpu6502_ptr;
 		PPU* m_ppu_ptr;
+
+		std::vector<type8> m_wram;
 	};
 }
 

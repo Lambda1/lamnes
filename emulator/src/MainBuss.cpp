@@ -10,6 +10,7 @@ namespace lamnes
 		m_cpu6502_ptr{nullptr},
 		m_ppu_ptr{nullptr}
 	{
+		m_wram.resize(0x0800, 0);
 	}
 	MainBuss::~MainBuss()
 	{
@@ -31,30 +32,42 @@ namespace lamnes
 		if (addr < static_cast<address>(0x0800))
 		{
 			// WRAM
+			data = m_wram[addr];
 		}
 		else if (addr < static_cast<address>(0x2000))
 		{
 			// 0x0000-0x07ff MIRROR
+			std::cerr << "MIR" << std::endl;
+			std::exit(EXIT_FAILURE);
 		}
 		else if (addr < static_cast<address>(0x2007))
 		{
 			// I/O PPU
+			data = m_ppu_ptr->Read(addr);
 		}
 		else if (addr < static_cast<address>(0x4000))
 		{
 			// 0x2000-0x2007 MIRROR
+			std::cerr << "MIR" << std::endl;
+			std::exit(EXIT_FAILURE);
 		}
 		else if (addr < static_cast<address>(0x401F))
 		{
 			// I/O APU
+			std::cerr << "IO APU" << std::endl;
+			std::exit(EXIT_FAILURE);
 		}
 		else if (addr < static_cast<address>(0x6000))
 		{
 			// 拡張RAM
+			std::cerr << "ex ram" << std::endl;
+			std::exit(EXIT_FAILURE);
 		}
 		else if (addr < static_cast<address>(0x8000))
 		{
 			// バッテリーバックアップRAM
+			std::cerr << "back ram" << std::endl;
+			std::exit(EXIT_FAILURE);
 		}
 		else if (addr < static_cast<address>(0xC000))
 		{
@@ -77,10 +90,14 @@ namespace lamnes
 		if (addr < static_cast<address>(0x0800))
 		{
 			// WRAM
+			std::cerr << "WRAM" << std::endl;
+			std::exit(EXIT_FAILURE);
 		}
 		else if (addr < static_cast<address>(0x2000))
 		{
 			// 0x0000-0x07ff MIRROR
+			std::cerr << "MIR" << std::endl;
+			std::exit(EXIT_FAILURE);
 		}
 		else if (addr < static_cast<address>(0x2008))
 		{
@@ -90,18 +107,26 @@ namespace lamnes
 		else if (addr < static_cast<address>(0x4000))
 		{
 			// 0x2000-0x2007 MIRROR
+			std::cerr << "MIR" << std::endl;
+			std::exit(EXIT_FAILURE);
 		}
 		else if (addr < static_cast<address>(0x401F))
 		{
 			// I/O APU
+			std::cerr << "IO APU" << std::endl;
+			std::exit(EXIT_FAILURE);
 		}
 		else if (addr < static_cast<address>(0x6000))
 		{
 			// 拡張RAM
+			std::cerr << "ex ram" << std::endl;
+			std::exit(EXIT_FAILURE);
 		}
 		else if (addr < static_cast<address>(0x8000))
 		{
 			// バッテリーバックアップRAM
+			std::cerr << "back ram" << std::endl;
+			std::exit(EXIT_FAILURE);
 		}
 		else if (addr < static_cast<address>(0xC000))
 		{

@@ -97,16 +97,20 @@ namespace lamnes
 		case OP::IMPLIED::SEI:
 		case OP::IMPLIED::DEY:
 		case OP::IMPLIED::TXS:
+		case OP::IMPLIED::CLD:
 		case OP::IMPLIED::INX:
 			mode = Addressing::IMPLIED; break;
 		case OP::IMMEDIATE::LDY:
 		case OP::IMMEDIATE::LDX:
 		case OP::IMMEDIATE::LDA:
+		case OP::IMMEDIATE::CMP:
 			mode = Addressing::IMMEDIATE; break;
+		case OP::RELATIVE::BPL:
 		case OP::RELATIVE::BNE:
 			mode = Addressing::RELATIVE; break;
 		case OP::ABSOLUTE::JMP:
 		case OP::ABSOLUTE::STA:
+		case OP::ABSOLUTE::LDA:
 			mode = Addressing::ABSOLUTE; break;
 		case OP::ABSOLUTE_X::LDA:
 			mode = Addressing::ABSOLUTE_X; break;
@@ -170,6 +174,10 @@ namespace lamnes
 			SetZN(m_stack_ptr_value);
 			m_cycles += 2;
 			break;
+		case OP::IMPLIED::CLD:
+			m_status_reg = Status::D;
+			m_cycles += 2;
+			break;
 		case OP::IMPLIED::INX:
 			++m_idx_reg_x;
 			SetZN(m_idx_reg_x);
@@ -201,6 +209,14 @@ namespace lamnes
 			SetZN(m_accumulator);
 			m_cycles += 2;
 			break;
+		case OP::IMMEDIATE::CMP:
+		{
+			type8 data = m_accumulator - Fetch(m_pc++);
+			SetZN(data);
+			SetC(data);
+			m_cycles += 2;
+		}
+		break;
 		default:
 			break;
 		}
@@ -230,6 +246,17 @@ namespace lamnes
 			}
 			m_cycles += 2;
 		}
+			break;
+		case OP::RELATIVE::BPL:
+		{
+			type8 data = Fetch(m_pc++);
+			if (!isStatusFlag(Status::N))
+			{
+				m_pc = static_cast<address>(static_cast<int>(m_pc) + static_cast<int>(data));
+			}
+			m_cycles += 2;
+		}
+			break;
 		break;
 		default:
 			break;
@@ -249,6 +276,11 @@ namespace lamnes
 		case OP::ABSOLUTE::STA:
 			m_main_buss_ptr->Write(GetAddressFromPC(), m_accumulator);
 			m_status_reg = 0;
+			m_cycles += 4;
+			break;
+		case OP::ABSOLUTE::LDA:
+			m_accumulator = m_main_buss_ptr->Read(GetAddressFromPC());
+			SetZN(m_accumulator);
 			m_cycles += 4;
 			break;
 		default:
@@ -292,6 +324,17 @@ namespace lamnes
 		if ((val & Status::N) == Status::N)
 		{
 			m_status_reg |= Status::N;
+		}
+	}
+	void CPU6502::SetC(const type8& val)
+	{
+		if (val >= 0)
+		{
+			m_status_reg |= Status::C;
+		}
+		else
+		{
+			m_status_reg &= ~Status::C;
 		}
 	}
 
