@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "Cartridge.hpp"
+#include "./LamNES.hpp"
 
 int main(int argc, char* argv[])
 {
@@ -11,7 +11,10 @@ int main(int argc, char* argv[])
 		std::exit(EXIT_FAILURE);
 	}
 	
-	lamnes::Cartridge cartridge{};
+	lamnes::LamNES nes{};
+	nes.Init(argv[1]);
+
+	nes.MainLoop();
 
 	return 0;
 }

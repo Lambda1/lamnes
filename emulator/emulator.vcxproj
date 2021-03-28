@@ -142,10 +142,26 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Cartridge.cpp" />
+    <ClCompile Include="src\CPU6502.cpp" />
+    <ClCompile Include="src\LamNES.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\MainBuss.cpp" />
+    <ClCompile Include="src\PPU.cpp" />
+    <ClCompile Include="src\VirtualScreen.cpp" />
+    <ClCompile Include="src\VRAM.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Cartridge.hpp" />
+    <ClInclude Include="src\CPU6502.hpp" />
+    <ClInclude Include="src\DefAddressing.hpp" />
+    <ClInclude Include="src\DefOpcode.hpp" />
+    <ClInclude Include="src\DefStatusRegister.hpp" />
+    <ClInclude Include="src\DefType.hpp" />
+    <ClInclude Include="src\LamNES.hpp" />
+    <ClInclude Include="src\MainBuss.hpp" />
+    <ClInclude Include="src\PPU.hpp" />
+    <ClInclude Include="src\VirtualScreen.hpp" />
+    <ClInclude Include="src\VRAM.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
