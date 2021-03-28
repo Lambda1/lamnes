@@ -239,19 +239,22 @@ namespace lamnes
 		{
 			for (size_t j = 0; j < TILE_WIDTH; ++j)
 			{
+				// CHR ROMのアドレス取得
 				auto y = m_render_y / ONE_SPRITE_UNIT;
 				const address vram_addr = static_cast<address>(y * TILE_WIDTH + j);
 				const address pattern_addr = static_cast<address>(m_vram.Read(vram_addr) * ONE_SPRITE_BYTE_UNIT);
 
+				// レイヤの読み込み
 				auto layer1 = m_cartridge_ptr->ReadCHRROM(static_cast<address>(pattern_addr + i));
 				auto layer2 = m_cartridge_ptr->ReadCHRROM(static_cast<address>(pattern_addr + i + ONE_SPRITE_UNIT));
-
+				// 1ライン分のスプライト生成
 				ConvertSpriteOneLine(layer1, layer2, sprite_line);
 
 				// 属性読み出し
 				const address attribute_addr = 0x03C0 + vram_addr / (ONE_SPRITE_BYTE_UNIT * 2);
 				const type8 attribute_val = m_vram.Read(attribute_addr);
 
+				// 1ライン描画
 				RenderSpriteOneLine(j, m_render_y, sprite_line, attribute_val);
 			}
 			++m_render_y;
@@ -260,12 +263,13 @@ namespace lamnes
 	// 1スプライトの1ラインを描画
 	void PPU::RenderSpriteOneLine(const size_t& x, const size_t& y, const std::vector<char> &chr, const type8 &attrib_val)
 	{
+		// タイルIDからパレットIDを算出
 		const size_t tile_block_id = (((y / ONE_ATTRIBUTE_UNIT) % 2) << 1) | ((x / ONE_ATTRIBUTE_UNIT) % 2);
 		const size_t palette_id = (attrib_val >> (tile_block_id * 2)) & 0x03;
-		
+
 		for (size_t j = 0; j < ONE_SPRITE_UNIT; ++j)
 		{
-			const size_t idx = palette_id * 4 + chr[j];
+			const size_t idx = palette_id * PALETTE_STRIDE + chr[j];
 			const col color = m_palette_table[m_palette[idx]];
 			
 			m_virtual_screen.Render(x * ONE_SPRITE_UNIT + j, y, color.r ,color.g, color.b);

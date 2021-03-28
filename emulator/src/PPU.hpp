@@ -32,6 +32,8 @@ namespace lamnes
 
 		inline static constexpr size_t SCREEN_WIDTH = 256;
 		inline static constexpr size_t TILE_WIDTH = 32;
+		
+		inline static constexpr size_t PALETTE_STRIDE = 4;
 
 		inline static constexpr size_t ONE_LINE_CLOCK = 341;
 		inline static constexpr size_t STORE_DATA_TIMING_LINE = 8;
